@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <!-- <link rel="stylesheet" href="../css/ui-box.css"> -->
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <!-- <link rel="stylesheet" href="../css/ui-color.css"> -->
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/student.css">
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>  
+         <div class="stu-index-content">
+             <div id="header" class="stu-index-header">
+                    <p class="ut ulev-3 umar-r nickname"></p>                
+                    <div class="avater"><img src="../images/stu-avater.png"/></div>
+             </div>        
+             <div class="ub stu-index">
+                 <div class="stu-index-back"></div>
+                 <div class="month-chooser">
+                     <span class="back"><img src="../images/add_month.png" class="flipx"/></span>
+                     <span class="mon">11</span>
+                     <span class="forward"><img src="../images/add_month.png"/></span>
+                 </div>  
+                 <div class="task">
+                     <!-- <div class="gear gear-1">
+                         <span class="month">Aug</span>
+                         <img src="../images/gear-1.png" />
+                         <span class="day">24</span>
+                     </div>
+                     <div class="gear gear-2">
+                         <span class="month">Aug</span>
+                         <img src="../images/gear-2.png" />
+                         <span class="day">24</span>
+                     </div>
+                     <div class="gear gear-3">
+                         <span class="month">Aug</span>
+                         <img src="../images/gear-3.png" />
+                         <span class="day">24</span>
+                     </div>
+                     <div class="gear gear-4">
+                         <span class="month">Aug</span>
+                         <img src="../images/gear-4.png" />
+                         <span class="day">24</span>
+                     </div> -->
+                 </div>
+             </div>  
+         </div>    
+    </body>
+    <script src="../js/appcan.js"></script>
+    <script src="../js/appcan.control.js"></script>
+    </body>
+    <script>
+        appcan.ready(function() {
+            // uexWindow.setMultilPopoverFlippingEnbaled(1);
+        });
+        
+        var url = 'http://192.168.155.1:3000/yuhu/student';        
+        loadData();
+        
+        function loadData(mon){
+                        
+            $('.nickname').html(localStorage.getItem('nickname'));
+            $.ajax({
+                url : url+'/queryTask',
+                type : 'GET',
+                async:  false,
+                dataType: 'json',
+                timeout: 7000, 
+                data : {
+                    sid:localStorage.getItem('tid'),                   
+                    mon:mon
+                },
+                success : function(data) {   
+                    if(data.code==200){
+                        console.log(data.data);
+                        for(var i=0;i<data.data.length;i++){
+                            var date = data.data[i].begin_time.split('/');
+                            var month = parseInt(date[1])-1;
+                            var day = date[2];
+                            console.log(date);
+                            var monthArray=['Jan','Feb','Mar','April','May','June','July','Aug','Sep','Oct','Nov','Dec'];
+                            
+                            var $gear = $('<div></div>');
+                            var $month = $('<span class="month"></span>');
+                            var $day = $('<span class="day"></span>');
+                            var $img = $('<img>')
+                            $month.html(monthArray[month]);
+                            $day.html(day);
+                            $gear.append($month);                             
+                            switch((i+1)%4){
+                                case 1:
+                                    $gear.addClass('gear gear-1');
+                                    $img.attr('src','../images/gear-1.png');
+                                    break;
+                                case 2:
+                                    $gear.addClass('gear gear-2');
+                                    $img.attr('src','../images/gear-2.png');
+                                    break;
+                                case 3:
+                                    $gear.addClass('gear gear-3');
+                                    $img.attr('src','../images/gear-3.png');
+                                    break;
+                                case 0:
+                                    $gear.addClass('gear gear-4');
+                                    $img.attr('src','../images/gear-4.png');
+                                    break;                               
+                            }
+                            $gear.append($img);
+                            $gear.append($day);  
+                            
+                            if(mon!=undefined){
+                                
+                                $gear.click((function(date){
+                                    return function(){  
+                                         localStorage.setItem('hasMon',true);
+                                         localStorage.setItem('date',date);
+                                         // appcan.window.open({
+                                             // name:'taskList',
+                                             // aniId:2,
+                                             // data:'taskList.html',
+                                             // dataType:0
+                                        // }); 
+                                        uexWindow.open('taskList', '0', 'taskList.html', 2, '', '', 4, 500);
+                                    };                                 
+                                })(data.data[i].begin_time));
+                            }else{
+                                
+                                $gear.click((function(tno){
+                                    return function(){  
+                                         localStorage.setItem('hasMon',false);
+                                         localStorage.setItem('tno',tno);
+                                         // appcan.window.open({
+                                             // name:'taskList',
+                                             // aniId:2,
+                                             // data:'taskList.html',
+                                             // dataType:0
+                                        // }); 
+                                        uexWindow.open('taskList', '0', 'taskList.html', 2, '', '', 4, 500);
+                                    };                                 
+                                })(data.data[i].tno));
+                            }
+                             
+                                                                                                          
+                            $('.task').append($gear);                                                      
+                        }
+                    }
+                }, 
+                error : function(error){
+                    
+                }
+           });     
+        }       
+           
+        $('.forward').click(function(){
+            var mon = parseInt($('.mon').html());
+            if(mon<12){
+                $('.mon').html(mon+1);
+            }else{
+                return;
+            }
+        });
+        $('.back').click(function(){
+            var mon = parseInt($('.mon').html());
+            if(mon>1){
+                $('.mon').html(mon-1);
+            }else{
+                return;
+            }
+        });       
+        $('.mon').click(function(){
+            $('.task').empty();
+            loadData($('.month-chooser .mon').html());
+        });
+       
+    </script>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <!-- <link rel="stylesheet" href="css/ui-box.css"> -->
+        <link rel="stylesheet" href="css/ui-base.css">
+        <!-- <link rel="stylesheet" href="css/ui-color.css"> -->
+        <link rel="stylesheet" href="css/appcan.icon.css">
+        <link rel="stylesheet" href="css/appcan.control.css">
+        <link rel="stylesheet" href="css/firstload.css">
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <div class="content login-back">
+            <div class="login clear">
+                <img src="" class="avater"/>
+                <div> 
+                    <input name="tel" type="text" placeholder="手机号" id="tel"/> 
+                    <input name="pass" type="password" placeholder="密码" id="pass"/> 
+                    <button type="button" id="submit">提交</button> 
+                </div>
+                <p class="tip"></p>
+                <span class="fr reg">注册</span>
+            </div>
+        </div>
+        <script src="js/appcan.js"></script>
+        <script src="js/appcan.control.js"></script>
+        <script src="js/jquery-2.1.4.min.js"></script>
+    </body>
+    <script>
+        appcan.ready(function() {
+                      
+            var index = '';
+            if(localStorage.getItem('client')=='teacher'){
+                $('.avater').attr('src','images/tea-avater.png');
+                index = 'teacher';
+            }else{
+                $('.avater').attr('src','images/stu-avater.png');
+                index = 'student';
+            }
+            
+            if(localStorage.getItem('tel')!=null&&localStorage.getItem('tel')!=''&&
+                localStorage.getItem('pass')!=null&&localStorage.getItem('pass')!=''){
+                $('#tel').val(localStorage.getItem('tel'));
+                $('#pass').val(localStorage.getItem('pass'));
+                $('.reg').trigger('click');
+            }
+            
+            // appcan.initBounce(); 
+           
+            $('.reg').click(function(){
+                
+                uexWindow.open('register', '0', 'register.html', 2, '', '', 4, 500);
+            });
+            
+            function checkTel(){
+                var myreg = /^1[34578]\d{9}$/;
+                if($('#tel').val()==null||$('#tel').val()==''){
+                    $('.tip').html('手机号不能为空！');
+                    return false;
+                }
+                if($('#tel').val().length!=11||!myreg.test($('#tel').val())){
+                    $('.tip').html('请输入有效的手机号码！');
+                    return false;
+                }
+                $('.tip').html('');
+                return true;
+             }
+             function checkPass(){
+                 if($('#pass').val()==null||$('#pass').val()==''){
+                    $('.tip').html('密码不能为空！');
+                    return false;
+                }
+                $('.tip').html('');
+                return true;
+             }
+             $('#tel').blur(function(){
+                  checkTel();
+             });
+             $('#pass').blur(function(){
+                  checkPass();
+             });
+             $('#submit').click(function(event){
+                event.stopPropagation();
+                var url = '';
+                if(appcan.locStorage.getVal('client')=='teacher'){
+                    url = 'http://192.168.155.1:3000/yuhu/teacher';
+                }else{
+                    url = 'http://192.168.155.1:3000/yuhu/student';
+                }
+                if(checkTel()){
+                    if(checkPass()){
+                            $.ajax({
+                                url : url+'/login',
+                                type : 'GET',
+                                async:  true,
+                                dataType: 'json',
+                                timeout: 7000, 
+                                data : {
+                                    tel : $('#tel').val(),
+                                    pass : $('#pass').val()
+                                },
+                                success : function(data) {
+                                    if(data.data[0].result==1){
+                                        localStorage.setItem('tel',$('#tel').val());
+                                        localStorage.setItem('pass',$('#pass').val());                                        
+                                        $.ajax({
+                                            url : url+'/checkTel',
+                                            type : 'GET',
+                                            async:  false,
+                                            dataType: 'json',
+                                            timeout: 7000, 
+                                            data : {
+                                                tel : localStorage.getItem('tel')
+                                            },
+                                            success : function(data){ 
+                                                if(data.code==200){
+                                                    localStorage.setItem('tid',data.data[0].id);
+                                                    localStorage.setItem('nickname',data.data[0].nickname);
+                                                }                 
+                                            }
+                                       });  
+                                       // localStorage.setItem('tabindex','0');  
+                                       uexWindow.open(index, '0', index+'/index.html', 2, '', '', 4, 500); 
+                                       // uexWindow.evaluateScript('login', 0, 'close();');     
+                                       appcan.window.close(-1);                                                                                                              
+                                    }else{
+                                        $('.tip').html('用户名不存在或密码有误！');
+                                    } 
+                                }, 
+                                error : function(error) {
+                                    $('.tip').html('出现错误！');
+                                }   
+                            }); 
+                    }
+                }
+            });
+           
+            
+        })
+         
+       
+    </script>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/dictation.css">
+        <link href='https://cdn.webfont.youziku.com/webfonts/nomal/21324/45824/5831b234f629d8120c37104b.css' rel='stylesheet' type='text/css' />       
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <div class="dictation">
+            <p class="tip"><span class="index"></span>/<span class="total"></span>词</p>
+            <div class="control container">
+                <!-- <span id="init">初始化</span> -->
+                <span id="write">清除</span>
+                <span id="repeat">播放</span>
+                <span id="next">下一个</span>
+            </div>
+            <div class="grid container">
+                <div class="sm-grid"></div>
+                <div class="lg-grid"></div>
+            </div>
+        </div>
+    </body>
+    <script src="../js/appcan.js"></script>
+    <script src="../js/appcan.control.js"></script>
+    <script src="../js/jquery-2.1.4.min.js"></script>   
+    <script src="../js/main/dictation.js"></script>  
+    </body>
+    <script>
+        appcan.ready(function() {
+          init();
+          initSpeaker();
+          alert('init!');
+             
+          $.ajax({
+            url: url + '/queryTaskContentByTno',
+            type: 'GET',
+            async: false,
+            dataType: 'json',
+            timeout: 7000,
+            data: {
+              tno: tno
+            },
+            success: function(result) {
+              if (result.code == 200) {                      
+                data = result.data[0].content;
+alert(data);
+                words = data.split(' ');
+                num = words.length;  
+                startSpeaking(); 
+                $('.tip .index').html(index + 1);
+                $('.tip .total').html(num);
+            
+                for (var i = 0; i < DataLength(words[0]); i++) {
+                    drawGrid($('.sm-grid')[0], 'sm-grid' + (i + 1), '140', '#FFC301');
+                }
+                drawGrid($('.lg-grid')[0], 'can', '640', '#FFC301');     
+            }
+            },
+            error: function(error) {
+              alert('无法获取词语！');
+            }
+          });
+        
+         
+          // document.getElementById('init').addEventListener('click', function(e) {
+          // e.stopPropagation();
+          // init();
+          // initSpeaker();
+          // alert('init!');
+          // startSpeaking();
+          // }, false);
+        
+          document.getElementById('repeat').addEventListener('click', function(e) {
+            e.stopPropagation();
+            startSpeaking();
+          }, false);
+          document.getElementById('next').addEventListener('click', function(e) {
+            e.stopPropagation();
+            next();
+          }, false);
+        
+          //手机版
+          var can = document.getElementById('can');
+          can.addEventListener('touchstart', function(e) {
+            // 如果这个元素的位置内只有一个手指的话
+            if (e.targetTouches.length == 1) {
+              // alert('down');
+              var touch = e.targetTouches[0];
+              var x = touch.pageX - getAbsLeft(touch.target);
+              var y = touch.pageY - getAbsTop(touch.target);
+              single_data += x + ',' + y + ',';
+              is_mousedown = true;
+            }
+          }, false);
+        
+          can.addEventListener('touchend', function(e) {
+            // 一个手指离开屏幕，touches和targetTouches中对应的元素会同时移除，而changedTouches仍然会存在元素。       
+            // alert('end');
+            single_data += '-1,0,';
+            is_mousedown = false;
+          }, false);
+        
+          document.addEventListener('touchmove', function(e) {
+            e.preventDefault(); // 在这个事件发生期间，调用preventDefault()可阻止滚动。
+            if (e.targetTouches.length > 1 || event.scale && event.scale !== 1)
+              return;
+            // 如果这个元素的位置内只有一个手指的话
+            if (e.targetTouches.length == 1) {
+              // alert('move');
+              if (is_mousedown) {
+                // if (!is_clean) {                  
+                write(e);
+                // }
+              }
+            }
+          }, false);
+          
+          
+            // 调用汉王云接口识别单字
+            $('.sm-grid').on('click', '.wrapper', function() {
+                // 用户未写字只是想要重新写
+                if (single_data == '') {
+                    curr_write = $('.sm-grid .wrapper').index($(this));
+                    console.log('curr_write: ' + curr_write);
+                    return;
+                }
+                single_data += '-1,-1';
+                console.log(single_data);
+                var passData = {
+                    'uid': '192.168.155.1',
+                    'type': '1',
+                    'data': single_data
+                };
+            
+                $.ajax({
+                    url: 'http://api.hanvon.com/rt/ws/v1/hand/single?key=d44e2db0-240a-4acb-abbf-8d1980d59374&&code=83b798e7-cd10-4ce3-bd56-7b9e66ace93d',
+                    type: 'POST',
+                    async: false,
+                    contentType: 'application/octet-stream',
+                    data: JSON.stringify(passData),
+                    success: function(data) {
+                        console.log(data);
+                        data = utf8to16(base64decode(data));
+                        data = JSON.parse(data);
+                        if (data.code == 0) {
+                            var fonts = unicodeToString(data.result);
+                            $('.sm-grid .wrapper:eq(' + curr_write + ')').find('.font').html(fonts.charAt(0));
+                        }
+                    },
+                    error: function(error) {
+                        alert('出现位置错误！');
+                    }
+                });
+            
+                clearSingleData();
+                // curr_write = $(this).index();              //这次点击的位置就是下次要写入的位置').index($(this)); 
+                curr_write = $('.sm-grid .wrapper').index($(this));
+                single_data = '';
+                console.log('curr_write: ' + curr_write);
+            
+            });
+            
+            function next() {
+                var w = '';
+                for (var i = 0; i < $('.sm-grid .wrapper').length; i++) {
+                    w += $('.sm-grid .wrapper:eq(' + i + ') .font').html();
+                }
+                hand_words[index] = w;
+                console.log(hand_words[index]);
+            
+                index++;
+                clearSingleData();
+                single_data = '';
+                if (index > num - 1) {
+                    // index--;  
+                    for (var i = 0; i < $('.sm-grid .wrapper').length; i++) {
+                        w += $('.sm-grid .wrapper:eq(' + i + ') .font').html('');
+                    }
+                    var j = 0;
+                    for (var i = 0; i < num; i++) {
+                        if (words[i] != hand_words[i]) {
+                            errors[0][j] = words[i];
+                            errors[1][j] = hand_words[i];
+                            j++;
+                        }
+                    }
+                            
+                    alert('你有' + j + '个错误！\n');
+                    
+                    var score=parseFloat((100/num)*(num-j));
+                    var detail='';            
+                    for(var i=0;i<j;i++){
+                        detail+=errors[0][i];
+                    }
+                    alert('score:'+score+'  detail:'+detail); 
+                    $.ajax({
+                        url:url+'/addStuTask',
+                        type:'GET',
+                        data:{
+                            sid: localStorage.getItem('tid'), 
+                            tno: tno, 
+                            score: score,
+                            detail: detail
+                        },
+                        success:function(data){
+                            if(data.code == 200){
+                                
+                            }else{
+                                alert('提交失败');
+                            }
+                        },
+                        error:function(){
+                            alert('连接失败');
+                        }
+                        
+                    });           
+                    return;
+                }
+                
+                $('.tip .index').html(index + 1);
+                $('.sm-grid').empty();
+                for (var i = 0; i < DataLength(words[index]); i++) {
+                    drawGrid($('.sm-grid')[0], 'sm-grid' + (i + 1), '140', '#FFC301');
+                }
+                curr_write = 0;
+                word = words[index];
+                var params = {
+                    text: word
+                };
+                var data = JSON.stringify(params);
+                uexXunfei.startSpeaking(data);
+            }
+        });     
+    </script>
+</html>

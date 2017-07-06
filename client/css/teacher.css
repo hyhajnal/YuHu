@@ -1,0 +1,486 @@
+/**********公共样式***********/
+.fl{float:left;}
+.fr{float:right;}
+.clear{zoom:1;}
+.clear:after{
+    content:""; 
+    display:block;
+    clear:both;
+}
+html,body{
+    padding: 0;
+    margin: 0;
+}
+.wrapper-container{
+    position: relative;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+}
+.border-box{
+    -webkit-box-sizing: border-box;  // for ios-safari, android
+    -moz-box-sizing:border-box;  //for ff
+    box-sizing:border-box;   //for other
+}
+.tx-l{text-align: left;}
+.tx-r{text-align: right;}
+/*水平翻转*/
+.flipx {
+    -moz-transform:scaleX(-1);
+    -webkit-transform:scaleX(-1);
+    -o-transform:scaleX(-1);
+    transform:scaleX(-1);
+    /*IE*/
+    filter:FlipH;
+}
+/**********导航栏样式***********/
+
+/**********教师端首页***********/
+.tea-index-content{}
+.tea-index-header{
+    width:100%;
+    height: 2.7em;
+    position: fixed;
+    top:0;
+    left:0;
+    z-index: 9999;
+    background: #FFC301;
+    display: block;
+}
+.tea-index-header .nickname{
+    position:absolute;
+    right:0;
+    display:inline-block;
+    height:2.6em;
+    line-height:2.6em;
+    font-size: 1.2em;
+    font-weight:bold;
+    color:#FFFFFF;
+    margin-right: 30%;
+}
+.tea-index-header .avater{
+    position:absolute;
+    width: 3.8em;
+    height: 3.8em;
+    overflow: hidden;
+    text-align: center;
+    top:1.4em;
+    right:2em;
+}
+.tea-index-header .avater img{
+    display: inline-block;
+    width: 100%;
+    height: 100%;   
+}
+
+.tea-index{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%; 
+}
+.tea-index-back{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;  
+    background: #FFFFFF url(../images/index-back.png) no-repeat left top;
+    background-size: cover; 
+    background-attachment: fixed;
+}
+.tea-index .month-chooser{
+    position: fixed;
+    left:0.4em;
+    top: 2.4em;
+    color: #707070;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    text-shadow:#515151 2px 2px 5px;
+    /*border: 1px solid #000;*/
+}
+.tea-index .month-chooser span{
+    display:inline-block; 
+    vertical-align: middle;
+    /*border:1px solid red;*/
+}
+.tea-index .month-chooser span img{    
+    width: 0.8em;
+    height: 0.8em; 
+}
+.tea-index .publish{
+    margin: 6.6em 0 0 3em;
+    /*border: 1px solid #000;*/
+    text-align: right;
+    width: 36%;
+}
+.tea-index .publish .font{
+    /*border:1px solid red;*/
+    background:url(../images/font.png) no-repeat left top; 
+    background-size: contain;    
+    width: 7em;
+    height: 4em;        
+}
+.tea-index .publish .pub-button{
+    display: inline-block;
+    /*border:1px solid red;*/
+    background:url(../images/tea-publish.png) no-repeat left top;
+    background-size: contain; 
+    width: 5em;
+    height: 5em;
+    margin-top: -1.4em;
+}
+.tea-index .task{
+    width: 54%;
+    /*border: 3px solid red;*/
+    position: absolute;
+    top: 46%;
+    left: 40%;
+}
+.tea-index .task .gear{
+    position: relative;
+    width: 5em;
+    height: 5em;
+    margin-bottom: 3em;
+}
+.tea-index .task .gear:nth-child(2n+1){
+    float: left;
+    clear: both;
+}
+.tea-index .task .gear:nth-child(2n){
+    float: right;
+    clear: both;
+}
+.tea-index .task .gear img{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+.tea-index .task .gear .month{
+    position: absolute;  
+    color: #515151;
+    font-weight: bold;
+    font-size: 1.4em;
+    text-shadow:#515151 4px 2px 6px;
+}
+.tea-index .task .gear .day{
+    position: absolute;
+    top:50%;
+    left:50%;
+    color: #515151;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: -0.6em;
+    margin-left: -0.5em;
+    text-shadow:#333 4px 2px 4px;
+}
+.tea-index .task .gear-1 .month{
+    top:0.2em;
+    right:0.4em;
+    transform:rotate(18deg);
+    -ms-transform:rotate(18deg);     /* IE 9 */
+    -moz-transform:rotate(18deg);    /* Firefox */
+    -webkit-transform:rotate(18deg); /* Safari 和 Chrome */
+    -o-transform:rotate(18deg);  /* Opera */
+}
+.tea-index .task .gear-2 .month{
+    top:0;
+    left:-0.2em;
+}
+.tea-index .task .gear-3 .month{
+    top:0;
+    left:20%;
+    transform:rotate(-8deg);
+    -ms-transform:rotate(-8deg);     /* IE 9 */
+    -moz-transform:rotate(-8deg);    /* Firefox */
+    -webkit-transform:rotate(-8deg); /* Safari 和 Chrome */
+    -o-transform:rotate(-8deg);  /* Opera */
+}
+.tea-index .task .gear-4 .month{
+    top:0;
+    left:0;
+    transform:rotate(-30deg);
+    -ms-transform:rotate(-30deg);     /* IE 9 */
+    -moz-transform:rotate(-30deg);    /* Firefox */
+    -webkit-transform:rotate(-30deg); /* Safari 和 Chrome */
+    -o-transform:rotate(-30deg);  /* Opera */
+}
+/**********任务发布页***********/
+
+
+/**********任务详情页***********/
+.task-list .task-list-back{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;  
+    /*background: #fcfadc url(../images/task-list-back2.png) no-repeat left top;*/
+    background: #F9F19C url(../images/task-list-back2.png) no-repeat left top;
+    background-size: cover; 
+    background-attachment: fixed;
+}
+.tasklist-header{
+    text-align: center;
+    /*border:1px solid red;*/
+    width:100%;
+    height: 5em;
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 9999;
+}
+.task-list .back{
+    width:2.4em;
+    height:1.8em;
+    position: absolute;
+    left:1em;
+    top:1em;
+    z-index: 99999;
+    /*border: 1px solid red;*/
+}
+.task-list .back img{   
+    display: inline-block;
+    width:2.4em;
+    height:1.8em;
+}
+.tasklist-header h1{
+    font-size: 1.4em;
+    display: inline-block;
+    line-height: 5em;  
+}
+.content-container{
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 9999;
+    width: 100%;
+    height:100%;
+}
+
+.circle {
+     width: 7em;
+     height: 7em;  
+     position: absolute;
+     border-radius: 50%;
+     background: #2F3438;
+ }
+.pie_left, .pie_right {
+     width: 7em; 
+     height: 7em;
+     position: absolute;
+     top: 0;left: 0;
+ }
+ .left, .right {
+     display: block;
+     width: 7em; 
+     height: 7em;
+     background:#00aacc;
+     border-radius: 50%;
+     position: absolute;
+     top: 0;
+     left: 0;
+     /*transform: rotate(30deg);*/
+ }
+ .pie_right, .right {
+     clip:rect(0,auto,auto,3.5em);
+ }
+ .pie_left, .left {
+     clip:rect(0,3.5em,auto,0);
+ }
+ .pie_left .left,
+ .pie_right .right {
+     transition: transform 1s;
+     -moz-transition: -moz-transform 1s; /* Firefox 4 */
+     -webkit-transition: -webkit-transform 1s; /* Safari 和 Chrome */
+     -o-transition: -o-transform 1s; /* Opera */
+ }
+ .mask {
+     width: 4.6em;
+     height: 4.6em;
+     border-radius: 50%;
+     left: 1.2em;
+     top: 1.2em;
+     background: #FFF;
+     position: absolute;
+     text-align: center;
+     line-height: 4.6em;
+ }
+ .mask span{
+     font-size: 1.4em;
+ }
+ .task-list .tasks{
+     width: 76%;
+     margin:7em auto 0;
+ }
+ .tasks .task{
+    position:relative;
+    width: 100%;
+    /*border:1px solid green;*/
+    margin-bottom:1em;
+ }
+ .task .circle{
+     position: relative;
+ }
+ .task .icon{
+     width: 1.4em;
+     height:1.4em;
+     position: absolute;
+     right: -2.2em;
+     top:50%;
+     margin-top: -0.7em;
+ }
+ .task_finished:after{
+     display: inline-block; 
+     content:"";
+     width: 1.8em;
+     height: 1.8em;
+     content: url(../images/task_finished.png);
+     position: absolute;
+     right:-0.2em;
+     bottom:-0.2em;
+ }
+ .tasks .task-1 {
+      /*border:1px solid green;*/
+ }
+ .tasks .task-1 .circle{
+     -moz-transform:scale(0.9,0.9); 
+     -webkit-transform:scale(0.9,0.9); 
+     -o-transform:scale(0.9,0.9); 
+     background-color: #D06E6F;
+ }
+ .tasks .task-2 .circle{
+     -moz-transform:scale(0.96,0.96); 
+     -webkit-transform:scale(0.96,0.96); 
+     -o-transform:scale(0.96,0.96);
+     background-color: #F09F87;
+ }
+ .tasks .task-3 .circle{
+     -moz-transform:scale(1.02,1.02); 
+     -webkit-transform:scale(1.02,1.02); 
+     -o-transform:scale(1.02,1.02); 
+     background-color: #6D5D72;
+ }
+ .tasks .task-4 .circle{
+     -moz-transform:scale(0.96,0.96); 
+     -webkit-transform:scale(0.96,0.96); 
+     -o-transform:scale(0.96,0.96); 
+     background-color: #14C3A2;
+ }
+ .color1{background-color: #CF4647;}
+ .color2{background-color: #EB7B59}
+ .color3{background-color: #524656;}
+ .color4{background-color: #22E8C3;}
+ .tasks .name{
+     width: 50%;
+     display:inline-block;
+     word-wrap:break-word; 
+     word-break:break-all; 
+     overflow:hidden; 
+     /*border:1px solid red;*/
+     line-height: 1.6em;
+     height: 7em;
+     font-size: 1em;
+     padding: 1em 0.4em 0.4em;
+     -webkit-box-sizing: border-box;  // for ios-safari, android
+     -moz-box-sizing:border-box;  //for ff
+     box-sizing:border-box;   //for other
+ }
+ .tasks .name span{
+     display: inline-block;
+     position: relative;
+     width: 100%;
+     height:100%;
+ }
+ /*教室页*/
+.classroom{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.classroom .no-room{
+    width: 100%;
+    height:100%;
+    background-color: rgba(249,241,156,1);
+    position: relative;
+    overflow: hidden;
+}
+.classroom .no-room .pic{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;  
+    background: url(../images/createroom-back.png) no-repeat left top;
+    background-size: cover; 
+    background-attachment: fixed;
+}
+.classroom .no-room .board{
+    /*border: 1px solid red;*/
+    margin: 8em auto 0;
+    font-size: 1em;
+    text-align: center;
+    position: relative;
+}
+.classroom .no-room .board p{
+    margin-bottom: 0.8em;
+}
+.classroom .no-room .board input,
+.classroom .no-room .board button{
+    display:inline-block;
+    background: #F9F0D1;
+    outline: none;
+    font-family:"方正等线";
+    width: 56%;
+    padding:0.4em 0.4em 0.4em 0.6em;
+    font-size:1em;
+    border:none;
+    border-radius:0.4em;
+    margin-top:0.5em;
+    -webkit-box-sizing: border-box;  // for ios-safari, android
+    -moz-box-sizing:border-box;  //for ff
+    box-sizing:border-box;   //for other
+}
+.classroom .no-room .board button{
+    background-color:#eee;
+    margin-top:0.5em;
+}
+/*.classroom .no-room .back{
+    position: fixed;
+    left:0.6em;
+    bottom:2.8em;
+}
+.classroom .no-room .back img{
+    width:3em;
+    height:2em;
+}*/
+
+/*.classroom .room{
+    position:relative;
+    width:100%;
+    height:100%;
+}
+.classroom .room .pic{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;  
+    background: url(../images/star2.jpg) no-repeat left top;
+    background-size: cover; 
+    background-attachment: fixed;
+}
+.classroom .room h1{
+    color:#FFFFFF;
+}
+.classroom .room #main{
+    position: absolute;
+    left:0;
+    top:30px;
+}*/
+ 
+ 
+ 
+ 

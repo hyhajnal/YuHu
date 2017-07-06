@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <!-- <link rel="stylesheet" href="../css/ui-box.css"> -->
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <!-- <link rel="stylesheet" href="../css/ui-color.css"> -->
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css"> 
+        <link rel="stylesheet" href="../css/teacher.css">
+        <link href='https://cdn.webfont.youziku.com/webfonts/nomal/21324/45824/5831b234f629d8120c37104b.css' rel='stylesheet' type='text/css' />       
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <div class="task-list wrapper-container">
+             <div class="task-list-back"></div>
+             <div id="header" class="tasklist-header">
+                
+                <h1 class="css7274964e5534c">任务详情</h1>           
+            </div>
+            <div class="back">
+                <img src="../images/back.png"/>
+            </div>
+            <div class="content-container">
+                <div class="tasks">
+                    <!-- <div class="task task-1 border-box clear">
+                        <p class="name fr tx-l"><span class="task_finished">1. 背诵 《观潮》</span></p>
+                        <div class="circle fl">
+                            <div class="pie_left"><div class="left color1"></div></div>
+                            <div class="pie_right"><div class="right color1"></div></div>
+                            <div class="mask"><span>25</span>%</div>
+                        </div>
+                    </div>
+                    <div class="task task-2 border-box clear">
+                        <p class="name fl tx-l"><span class="task_finished">2. 听写 《观潮》</span></p>
+                        <div class="circle fr">
+                            <div class="pie_left"><div class="left color2"></div></div>
+                            <div class="pie_right"><div class="right color2"></div></div>
+                            <div class="mask"><span>25</span>%</div>
+                        </div>
+                    </div>
+                    <div class="task task-3 border-box clear">
+                        <p class="name fr tx-l"><span>3. 背诵 《观潮》</span></p>
+                        <div class="circle fl">
+                            <div class="pie_left"><div class="left color3"></div></div>
+                            <div class="pie_right"><div class="right color3"></div></div>
+                            <div class="mask"><span>25</span>%</div>
+                        </div>
+                    </div>
+                    <div class="task task-4 border-box clear">
+                        <p class="name fl tx-l"><span>4. 听写 《观潮》</span></p>
+                        <div class="circle fr">
+                            <div class="pie_left"><div class="left color4"></div></div>
+                            <div class="pie_right"><div class="right color4"></div></div>
+                            <div class="mask"><span>25</span>%</div>
+                        </div>
+                    </div> -->
+                 </div>
+            </div>
+        </div>
+    </body>
+    <script src="../js/appcan.js"></script>
+    <script src="../js/appcan.control.js"></script>
+    <script src="../js/jquery-2.1.4.min.js"></script> 
+    <script>
+        appcan.ready(function() {
+            console.log('taskList')
+            var url = 'http://192.168.155.1:3000/yuhu/teacher';        
+            var date = localStorage.getItem('date');
+            localStorage.removeItem('date');
+            var tno = localStorage.getItem('tno');
+            localStorage.removeItem('tno');
+            var hasMon=localStorage.getItem('hasMon');
+            localStorage.removeItem('hasMon');
+            
+            if(hasMon=='true'){
+                url=url+'/queryTaskByDate';
+            }else{
+                url=url+'/queryTaskByTno';
+            }                
+                   
+            $('.back').click(function(){    
+                // alert('closed!');
+                uexWindow.evaluateScript('taskList', 0, 'close();');
+            });
+            
+            $.ajax({
+                    url : url,
+                    type : 'GET',
+                    async:  false,
+                    dataType: 'json',
+                    timeout: 7000, 
+                    data : {
+                        date: date,
+                        tno: tno
+                    },
+                    success : function(data){
+                        if(data.code==200){
+                            for(var i=0;i<data.data.length;i++){
+                                
+                                var content = data.data[i].name;   
+                                var end_time = data.data[i].end_time;
+                                var totalnum = parseInt(data.data[i].totalnum);
+                                var num = parseInt(data.data[i].num);
+                                var rate;
+                                (totalnum>0)?rate=parseInt(num*100/totalnum):rate=0;                 
+                                
+                                var $task=$('<div class="task border-box clear"></div>');
+                                var $name=$('<p class="name"><span>'+(i+1)+'. '+content+'</span></p>');
+                                var $circle=$('<div class="circle"></div>');
+                                var $pie_left=$('<div class="pie_left"><div class="left"></div></div>');
+                                var $pie_right=$('<div class="pie_right"><div class="right"></div></div>');
+                                var $mask=$('<div class="mask"><span class="css7274964e5534c">'+rate+'</span>%</div>');
+                                
+                                $task.append($name).append($circle);
+                                $circle.append($pie_left).append($pie_right).append($mask);
+                                
+                                if(getDate()>end_time){
+                                    $name.find('span').addClass('task_finished');
+                                }
+                                switch((i+1)%4){
+                                    case 0:
+                                        $task.addClass('task-1');
+                                        $name.addClass('fr tx-r');
+                                        $circle.addClass('fl');
+                                        $circle.find('.left,.right').addClass('color1');
+                                        break;   
+                                    case 1:
+                                        $task.addClass('task-2');
+                                        $name.addClass('fl tx-l');
+                                        $circle.addClass('fr');
+                                        $circle.find('.left,.right').addClass('color2');
+                                        break;
+                                    case 2:
+                                        $task.addClass('task-3');
+                                        $name.addClass('fr tx-r');
+                                        $circle.addClass('fl');
+                                        $circle.find('.left,.right').addClass('color3');
+                                        break;
+                                    case 3:
+                                        $task.addClass('task-4');
+                                        $name.addClass('fl tx-l');
+                                        $circle.addClass('fr');
+                                        $circle.find('.left,.right').addClass('color4');
+                                        break;
+                                                            
+                                }                            
+                                $('.tasks').append($task);                               
+                            }  
+                            setTimeout(function(){
+                                $('.circle').each(function(index, el) {
+                                    var num = $(this).find('span').text() * 3.6;
+                                    if (num<=180) {
+                                        $(this).find('.right').css('transform', "rotate(" + num + "deg)");                                                  
+                                    } else {
+                                        // $(this).find('.right').css('transform', "rotate(180deg)");
+                                                                       
+                                        animate($(this),function(){
+                                            // alert('callback');
+                                            $('.temp').find('.left').css('transform', "rotate(" + (num - 180) + "deg)");                                           
+                                            $('.temp').removeClass('temp');
+                                        });
+                                    };
+                                });
+                            },1000);                                                
+                        }else{
+                            alert(data.msg);
+                        }                                       
+                    }, 
+                    error : function(error){
+                        alert('出现错误！');
+                    } 
+                });
+                function getDate(){
+                    var date = new Date();
+                    var str = date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate();
+                    return str;
+                }
+                console.log('inner');
+        });        
+        console.log('outer');       
+       
+        function animate($this,callback){
+            $this.find('.right').css('transform', 'rotate(180deg)');
+            $this.addClass('temp');
+            if(callback){
+                setTimeout(function(){
+                    callback();
+                },1000);  
+            }
+        }
+    </script>
+</html>

@@ -1,0 +1,184 @@
+/**********公共样式***********/
+.fl{float:left;}
+.fr{float:right;}
+.clear{zoom:1;}
+.clear:after{
+    content:""; 
+    display:block;
+    clear:both;
+}
+html,body{
+    padding: 0;
+    margin: 0;
+}
+.wrapper-container{
+    position: relative;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+}
+.border-box{
+    -webkit-box-sizing: border-box;  // for ios-safari, android
+    -moz-box-sizing:border-box;  //for ff
+    box-sizing:border-box;   //for other
+}
+.tx-l{text-align: left;}
+.tx-r{text-align: right;}
+/*选择页*/
+.choice{
+    width:100%;
+    height:100%; 
+    position:relative;
+}
+.choice-back{
+    background: #FFFFFF url(../images/choice-back.png) no-repeat left top;
+    background-size: cover;
+}
+.choice-avater{
+    width: 100%;
+    position: absolute;
+    top:7em;
+    left: 0;
+}
+.teacher{
+    margin-bottom: 3em; 
+}
+.choice-tea,
+.choice-stu{
+    display: inline-block;
+    width: 7.2em;
+    height:auto;
+    margin: 0 1.8em;
+}
+.choice-tea-font,
+.choice-stu-font{
+    display: inline-block;
+    margin-top: 1.2em;
+}
+.choice-tea-font img,
+.choice-stu-font img{
+    display: inline-block;
+    width: 5em;
+    height:auto;
+}
+/*登录页*/
+.content{
+    width:100%;
+    height:100%;
+    position: relative;
+}
+.login-back{
+    background: #FFFFFF url(../images/login-back.png) no-repeat left top;
+    background-size: cover;
+}
+.login{
+    width:80%;
+    margin-top: 3em;
+    text-align: center;
+    padding:0.4em;
+    position: absolute;
+    top:0;
+    left:10%;
+}
+.avater{
+    width: 6em;
+    height: auto;
+    display: inline-block;
+    margin-bottom: 1.4em;
+}
+.login input,
+.login #submit{
+    font-family:"方正等线";
+    outline: none;
+    width: 90%;
+    padding:0.4em 0.4em 0.4em 0.6em;
+    font-size:1em;
+    border:none;
+    border-radius:0.4em;
+    margin-bottom:0.8em;
+    -webkit-box-sizing: border-box;  // for ios-safari, android
+    -moz-box-sizing:border-box;  //for ff
+    box-sizing:border-box;   //for other
+}
+.login #submit{
+    background:#D24A56;
+    color:#FFFFFF;
+    padding:0.4em;
+    margin-bottom:0.4em;
+}
+.login .reg{
+    color:#D24A56;
+    text-decoration: underline;
+    font-size: 1em;
+    display: inline-block;
+    margin-right:10.5%;
+}
+.login .tip{
+    color:#D24A56;
+    font-size: 0.8em;
+    margin-top: 0.4em;
+}
+.login #submit:after{
+    content:'';
+    width: 1em;
+    height: 1em;
+    background-image:url(../images/decoration.png);
+    background-size:100% 100%;
+    position:absolute;
+    vertical-align: middle;
+    margin-left: 1.2em;
+}
+
+/*注册页*/
+.register-back{
+    background: #FFFFFF url(../images/login-back.png) no-repeat left top;
+    background-size: cover;
+}
+.register{
+    width:80%;
+    margin-top: 3em;
+    text-align: center;
+    padding:0.4em;
+    position: absolute;
+    top:0;
+    left:10%;
+}
+.register p{
+    font-size: 1.4em;
+    font-family:"方正等线";
+    margin-bottom: 1em;
+}
+.register input,.register #submit{
+    outline: none;
+    font-family:"方正等线";
+    width: 90%;
+    padding:0.4em 0.4em 0.4em 0.6em;
+    font-size:1em;
+    border:none;
+    border-radius:0.4em;
+    margin-bottom:0.8em;
+    -webkit-box-sizing: border-box;  // for ios-safari, android
+    -moz-box-sizing:border-box;  //for ff
+    box-sizing:border-box;   //for other
+}
+.register #submit{
+    background-color:#D24A56;
+    color:#FFFFFF;
+    padding:0.4em;
+}
+.register #submit:after{
+    content:'';
+    width: 1em;
+    height: 1em;
+    background-image:url(../images/decoration.png);
+    background-size:100% 100%;
+    position:absolute;
+    vertical-align: middle;
+    margin-left: 1.2em;
+}
+.register .tip{
+    color:#D24A56;
+    font-size: 0.8em;
+    margin-top: 0.4em;
+}

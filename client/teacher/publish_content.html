@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <!-- <link rel="stylesheet" href="../css/ui-box.css"> -->
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <!-- <link rel="stylesheet" href="../css/ui-color.css"> -->
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">    
+        <link rel="stylesheet" href="../css/publish.css">
+        <link href='https://cdn.webfont.youziku.com/webfonts/nomal/21324/45824/5831b234f629d8120c37104b.css' rel='stylesheet' type='text/css' />       
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <div class="container">
+            <div class="publish-back"></div> 
+            <div id="header" class="publish-header">
+                <div class="back">
+                    <img src="../images/back.png"/>
+                </div>
+                <h1 class="css7274964e5534c">词语发布</h1>           
+            </div>
+            <div class="ub publish-page"> 
+                           
+                     <div class="input-list">
+                         <span class="input input--haruki input-word">
+                            <input class="input__field input__field--haruki" type="text" id="input-word" />
+                            <label class="input__label input__label--haruki" for="input-word">
+                                <span class="input__label-content input__label-content--haruki css7274964e5534c">词语</span>
+                            </label>
+                         </span>
+                         <span class="input input--haruki input-desc">
+                            <input class="input__field input__field--haruki" type="text" id="input-desc" />
+                            <label class="input__label input__label--haruki" for="input-desc">
+                                <span class="input__label-content input__label-content--haruki css7274964e5534c">词语描述</span>
+                            </label>
+                         </span>
+                         <span class="input input--haruki input-name">
+                            <input class="input__field input__field--haruki" type="text" id="input-task" />
+                            <label class="input__label input__label--haruki" for="input-task">
+                                <span class="input__label-content input__label-content--haruki css7274964e5534c">任务名称</span>
+                            </label>
+                         </span>
+                         <span class="input input--haruki input-date">
+                            <input class="input__field input__field--haruki" type="text" id="input-date" />
+                            <label class="input__label input__label--haruki" for="input-date">
+                                <span class="input__label-content input__label-content--haruki css7274964e5534c">截止日期</span>
+                            </label>
+                         </span>
+                     </div>
+                     
+                     <!-- <div class="input-word">
+                         <input type="text" placeholder="词语"/>
+                     </div>   
+                     <div class="input-desc">
+                         <input type="text" placeholder="描述"/>
+                     </div>
+                     <div class="input-name">
+                         <input type="text" placeholder="名称"/>
+                     </div>
+                     <div class="input-date">
+                         <input type="text" placeholder="截止日期"/>
+                     </div> -->
+                     
+                     <!-- <div class="input-score">
+                         <input type="text" placeholder="分数"/>
+                     </div> -->
+            </div> 
+             <div class="content">
+                 <!-- <div class="word">你好</div>
+                 <div class="word">真实</div>
+                  -->
+             </div>
+             <div class="add">
+                 <img src="../images/publish-add.png"/>
+             </div>
+             <div class="pub-but">
+                 <img src="../images/publish-pub.png"/>
+             </div>      
+        </div>         
+    </body>
+    <script src="../js/appcan.js"></script>
+    <script src="../js/appcan.control.js"></script>
+    <script>
+        appcan.ready(function() {
+            console.log('publish');
+            // $(function(){
+            var words='';
+            var url = 'http://192.168.155.1:3000/yuhu/teacher';
+            $('.container .add').click(function(){
+                if($('.input-word input').val()!=''){
+                    var $word = $('<div></div>');
+                    $word.addClass('word');
+                    $word.html($('.input-word input').val());
+                    $('.content').append($word);
+                    words+=$('.input-word input').val()+':'+$('.input-desc input').val();
+                    words+=' ';            
+                    $('.input-word input').val(''); 
+                    $('.input-desc input').val('');  
+                    
+                }                      
+            });
+            
+            $('.pub-but').click(function(){
+                if($('.input-name input').val()==''||$('.input-date input').val()==''||words==''){
+                    alert('请填写完毕！');
+                    return;
+                }
+                       
+                 $.ajax({
+                    url : url+'/publishTask',
+                    type : 'POST',
+                    async:  true,
+                    dataType: 'json',
+                    timeout: 7000, 
+                    data : {
+                        tid:localStorage.getItem('tid'),
+                        name:$('.input-name input').val(),
+                        content:words.substring(0,words.length-1),
+                        // score:$('.input-score input').val(),
+                        endtime:$('.input-date input').val()
+                    },
+                    success : function(data) {   
+                        if(data.code==200){
+                            // 在指定的主窗口脚本执行
+                            
+                            // appcan.window.evaluateScript('teacher','invokeLoadData();');
+                            // appcan.window.evaluateScript('teacher','window.location.reload();');
+                            // appcan.window.evaluateScript('teacher','freshIndex();');
+                            // appcan.window.open({
+                                // name:'teacher',
+                                // aniId:2,
+                                // data:'index.html',
+                                // dataType:0
+                            // }); 
+                            
+                           uexWindow.evaluateScript('teacher', 0, 'invokeLoadData();');                        
+                           uexWindow.evaluateScript('publish', 0, 'close();');
+                            // uexWindow.close(-1);      //只关闭当前子窗口
+                           // appcan.window.evaluateScript('publish','close()') 
+                           // appcan.window.evaluateScript('','close()')    //或者不写第一个参数 默认为当前窗口父窗口-word input').val('');
+                           $('.input-name input').val('');
+                           $('.input-date input').val('');
+                           // $('.input-score input').val('');
+                           $('.content').empty();
+                        }
+                    }, 
+                    error : function(error) {
+                        
+                    }
+               }); 
+            });
+            
+            
+        $('.back').click(function(){           
+           uexWindow.evaluateScript('publish', '0', 'close();'); 
+        });
+        
+        // });
+        
+        });
+    
+    </script>
+</html>

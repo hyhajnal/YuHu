@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <!-- <link rel="stylesheet" href="css/ui-box.css"> -->
+        <link rel="stylesheet" href="css/ui-base.css">
+        <!-- <link rel="stylesheet" href="css/ui-color.css"> -->
+        <link rel="stylesheet" href="css/appcan.icon.css">
+        <link rel="stylesheet" href="css/appcan.control.css">
+        <link rel="stylesheet" href="css/firstload.css">
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <div class="content register-back">
+            <div class="register">
+                <p>注册</p>
+                <div> 
+                    <input name="tel" type="text" placeholder="手机号" id="tel"/> 
+                    <input name="pass" type="password" placeholder="密码" id="pass"/> 
+                    <input name="re-pass" type="password" placeholder="重复密码" id="re-pass"/>
+                    <button type="button" id="submit">提交</button>
+                    <p class="tip"></p>
+                </div>
+            </div>
+        </div>
+        <script src="js/appcan.js"></script>
+        <script src="js/appcan.control.js"></script>
+        <script src="js/jquery-2.1.4.min.js"></script>
+    </body>
+    <script>
+        appcan.ready(function(){
+            
+            var index = '';
+            var url = '';
+            if(localStorage.getItem('client')=='teacher'){
+                url = 'http://192.168.155.1:3000/yuhu/teacher';
+                index = 'teacher';
+            }else{
+                url = 'http://192.168.155.1:3000/yuhu/student';
+                index = 'student';
+            }
+            
+            // appcan.initBounce();
+            
+            function checkTelUnique(){
+                var result = true;
+                $.ajax({
+                    url : url+'/checkTel',
+                    type : 'GET',
+                    async:  false,
+                    dataType: 'json',
+                    timeout: 7000, 
+                    data : {
+                        tel : $('#tel').val()
+                    },
+                    success : function(data) {   
+                        if(data.data.length==1){
+                            result =  false;
+                        }
+                    }, 
+                    error : function(error) {
+                        $('.tip').html('出现错误！');
+                    }
+               }); 
+            
+               return result;
+            }
+            function checkTel(){
+                var myreg = /^1[34578]\d{9}$/;
+                if($('#tel').val()==null||$('#tel').val()==''){
+                    $('.tip').html('手机号不能为空！');
+                    return false;
+                }
+                if($('#tel').val().length!=11||!myreg.test($('#tel').val())){
+                    $('.tip').html('请输入有效的手机号码！');
+                    return false;
+                }
+                if(!checkTelUnique()){
+                    $('.tip').html('手机号已被注册！');
+                    return false;
+                }
+                $('.tip').html('');
+                return true;
+             }
+             function checkPass(){
+                 if($('#pass').val()==null||$('#pass').val()==''){
+                    $('.tip').html('密码不能为空！');
+                    return false;
+                }
+                $('.tip').html('');
+                return true;
+             }
+             function checkRePass(){
+                 if($('#re-pass').val()==null||$('#re-pass').val()==''){
+                    $('.tip').html('请确认密码！');
+                    return false;
+                }
+                if($('#re-pass').val()!=$('#pass').val()){
+                    $('.tip').html('两次密码不一致！');
+                    return false;
+                }
+                $('.tip').html('');
+                return true;
+             }
+             
+             $('#tel').blur(function(){
+                  checkTel();
+             });
+             $('#pass').blur(function(){
+                  checkPass();
+             });
+             $('#re-pass').blur(function(){
+                  checkRePass();
+             });
+             
+             $('#submit').click(function(event){
+                event.stopPropagation();
+                
+                if(checkTel()){
+                    if(checkPass()){
+                        if(checkRePass()){
+                            $.ajax({
+                                url : url+'/add',
+                                type : 'GET',
+                                async:  true,
+                                dataType: 'json',
+                                timeout: 7000, 
+                                data : {
+                                    tel : $('#tel').val(),
+                                    pass : $('#pass').val()
+                                },
+                                success : function(data){
+                                    if(data.code==200){
+                                        localStorage.setItem('tel',$('#tel').val());
+                                        localStorage.setItem('pass',$('#pass').val());
+                                        $.ajax({
+                                            url : url+'/checkTel',
+                                            type : 'GET',
+                                            async:  false,
+                                            dataType: 'json',
+                                            timeout: 7000, 
+                                            data : {
+                                                tel : localStorage.getItem('tel')
+                                            },
+                                            success : function(data){   
+                                                localStorage.setItem('tid',data.data[0].id);
+                                                localStorage.setItem('nickname',data.data[0].nickname);
+                                            }
+                                       });
+                                       uexWindow.open(index, '0', index+'/index.html', 2, '', '', 4, 500);                                      
+                                       // uexWindow.evaluateScript('register', 0, 'close();');
+                                       appcan.window.close(-1);        
+                                    }    
+                                                                    
+                                }, 
+                                error : function(error) {
+                                    $('.tip').html('出现错误！');
+                                }   
+                            }); 
+                        }
+                    }
+                }
+            });
+            
+        })
+           
+    </script>
+</html>

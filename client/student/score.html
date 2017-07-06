@@ -1,0 +1,372 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<link rel="stylesheet" href="../css/main/iconfont.css"/>
+<link rel="stylesheet" href="../css/ui-box.css">
+<link rel="stylesheet" href="../css/ui-base.css">
+<link rel="stylesheet" href="../css/ui-color.css">
+<link rel="stylesheet" href="../css/appcan.icon.css">
+<link rel="stylesheet" href="../css/appcan.control.css">
+
+<title></title>
+<style type="text/css">
+
+    html,body{margin:0px;padding:0px;width: 100%;height:90%;font-family: "微软雅黑";font-size: 1em;background: #fff;}
+    body{
+        position: relative;
+        overflow-x: hidden;
+    }
+    .iconfont{
+        font-size: 1em;
+        color:#fff;
+    }
+    #header{
+        position: fixed;
+        top:0;
+        left: 0;
+        z-index: 100;
+    }
+    #head_box{
+        width:80%;
+        margin:20% auto;
+        margin-bottom: 0;
+        
+    }
+    .icon-xingxing{
+        font-size:1.5em;
+        color:#555;
+    }
+    #head_box .active{
+        color: #F4D60B;
+    }
+    /*弹幕*/
+    .boxDom {
+        width:100%;
+        height: 40%;
+        top:40%;
+        z-index:1;
+        position: absolute;
+        overflow: hidden;
+        background-color: rgba(255,255,255,0);
+    }
+    .idDom {
+        width: 100%;
+        background-color: rgba(0,0,0,0.5);
+        position: absolute;
+        bottom: 0px;
+        z-index: 100;
+        text-align: center;
+        padding: 1em;
+    }
+    .title {
+        display: inline;
+        font-size: 20px;
+        vertical-align:bottom;
+        color:#fff;
+    }
+    .text {
+        border:none;
+        width:55%;
+        padding:5px;
+        border-radius: 5px;
+        font-size: 1em;
+    }
+    .btn {
+        padding:4px;
+        background: #f90000;
+        border:none;
+        color:#fff;
+        font-size: 1em;
+        display: inline-block;
+    }
+    .string {
+        z-index:100;
+        padding:10px;
+        border-radius:10px;
+        height: 40px;
+        position: absolute;
+        overflow: hidden;
+        color:#000;
+        font-size: 36px;
+        line-height: 36px;;
+        cursor: pointer;
+        white-space:nowrap;
+        background-color: rgba(0,0,0,0.8);
+    }
+   
+    
+    /*听写结果*/
+   #result_box{
+       width: 100%;
+       
+   }
+   .answer_box{
+       display:block;
+       width:90%;
+       margin: 20px auto;
+       background-color:#fff;
+       border: 10px solid #F2B93F;
+       height:7em;
+       border-radius: 20px;
+       padding:10px;
+       color:#000000;
+       overflow-y: scroll;
+   }
+   .answer_box em{
+       color:#FC7800;
+       font-weight:bold;
+   }
+   .word{
+       margin-right: 10px;
+   }
+   .wrong{
+       color:red;
+   }
+   
+   ::-webkit-scrollbar {
+          width: 4px;
+    } /* 这是针对缺省样式 (必须的) */
+   ::-webkit-scrollbar-track {
+          background-color: #fff;
+    } /* 滚动条的滑轨背景颜色 */
+
+    ::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.5); 
+    } /* 滑块颜色 */
+
+    ::-webkit-scrollbar-button {
+          background-color: #fff;
+    } /* 滑轨两头的监听按钮颜色 */
+
+    ::-webkit-scrollbar-corner {
+          background-color: black;
+    } /* 横向滚动条和纵向滚动条相交处尖角的颜色 */
+</style>
+</head>
+
+<body>
+ <!--header开始-->
+<div id="header" class="uh bc-text-head ub bc-head">
+    <!-- 左边-->
+    <div class="nav-btn" id="nav-left">
+        <i class="iconfont icon-return"></i>
+    </div>
+    <h1 class="ut ub-f1 ulev-3 ut-s tx-c">听写结果</h1>
+    <!-- 右边-->
+    <div class="nav-btn nav-bt" id="nav-right">
+        <div class="t-btn-ds2 ub-img uwh-tBtn"></div>
+    </div>
+</div>
+
+<div id="head_box">
+	<div class='uinn2 c-gra ub-pj ub '>
+     <div class='umh5 umw3'><i class="iconfont icon-xingxing"></i></div>
+     <div class='umh5 umw3'><i class="iconfont icon-xingxing"></i></div>
+     <div class='umh5 umw3'><i class="iconfont icon-xingxing"></i></div>
+     <div class='umh5 umw3'><i class="iconfont icon-xingxing"></i></div>
+     <div class='umh5 umw3'><i class="iconfont icon-xingxing"></i></div>
+    </div>
+</div>
+
+<div id="result_box">
+    <div id="student" class="answer_box"><em>你的答案:</em><br />
+    </div>
+	<div id="correct" class="answer_box"><em>正确答案:</em><br />
+	</div>
+</div>
+<div class="boxDom" id="boxDom">
+</div>
+
+<div class="idDom" id="idDom">
+        <input type="text" class="text" id="text" />
+        <button type="button" class="btn" id="btn">发射</button>
+        <button type="button" class="btn" id="clear" data-flag='1'>关闭</button>
+</div>
+
+</body>
+<script src="../js/appcan.js"></script>
+<script src="../js/appcan.control.js"></script>
+<script src="../js/jquery-2.1.4.min.js"></script>
+<script language="javascript">
+   appcan.ready(function() {
+        
+       
+        var score = localStorage.getItem('score');
+        var studentAnswer = localStorage.getItem('studentAnswer');//本次听写学生答案
+        var wordArray = localStorage.getItem('rightAnswer');//本次听写正确答案
+        var wrongWord = localStorage.getItem('wrongWord');//错误的词
+        var pageW=parseInt($('#boxDom').width());
+        var pageH=parseInt($('#boxDom').height());
+        var boxDom=$("#boxDom");
+        var btnDom=$("#btn");
+        var Top,Right;
+        var width;
+        width=pageW;
+        var colorArr=["#fff"];
+        //var sayings = [];
+        //--------需要注释--------
+        //score = 50;
+        var sayings = ['吐槽','太难了','so easy','太难了','哈哈','太难了','我又错了'];       
+        /*studentAnswer = '语文1,语文2,错误3,语文4,语文5,错误6,语文7,语文8,语文9,语文10,语文11,错误6,语文7,语文8,语文9,语文10,语文11,错误6,语文7,语文8,语文9,语文10,语文11,错误6,语文7,语文8,语文9,语文10,语文11';
+        wordArray = '语文1,语文2,语文3,语文4,语文5,语文6,语文7,语文8,语文9,语文10,语文11语文1,语文2,语文3,语文4,语文5,语文6,语文7,语文8,语文9,语文10,语文11语文1,语文2,语文3,语文4,语文5,语文6,语文7,语文8,语文9,语文10,语文11';
+        wrongWord = '语文3,语文6';*/
+        //--------需要注释--------
+        var starNum = Math.round(score / 100 * 5);
+        $('.icon-xingxing:lt('+ starNum +')').addClass('active');
+        studentAnswer.split(',').forEach(function(v){
+            var $span = $('<span class="word"></span>');
+            $span.text(v);
+            $('#student').append($span);
+        });
+        wordArray.split(',').forEach(function(v,i){
+            if(wrongWord.indexOf(v) != -1){
+                var $span = $('<span class="word wrong"></span>');
+                $('#student span:eq('+i+')').addClass('wrong');
+            }else{
+                var $span = $('<span class="word"></span>');
+            }            
+            $span.text(v);
+            $('#correct').append($span);
+        });
+        //获取所有评论
+        /*$.ajax({
+            url:'http://192.168.155.1:3000/yuhu/student/queryComments',
+            type:'GET',
+            data:{
+                tno:localStorage.getItem('tno')  
+                //tno:81101720                    
+            },
+            success:function(data){
+                if(data.code == 200 && data.data.length != 0){
+                    data.data.forEach(function(v){
+                        if(v.comments != null && v.comments != ''){
+                            sayings.push(v.comments);
+                        }
+                        
+                    });
+                    console.log(sayings);
+                    showCommet();
+                        
+                   
+                }else{
+                    //alert('获取所有评论失败');
+                }
+            },
+            error:function(){
+                alert('连接错误');
+            }
+            
+        });*/
+        
+        btnDom.bind("click",addSaying);
+        
+        //$('.mask span').text(score);
+        showCommet();
+        var time = setInterval(showCommet,6000);
+        
+        document.onkeydown=function(e){
+            if(e.keyCode == 13){
+                addSaying();           
+            }
+        }
+        function showCommet(){
+            sayings.forEach(function(value){
+                auto(value,0);
+            });
+        }
+        function auto(text,flag){
+            var creSpan=$("<span class='string'></span>");
+            creSpan.text(text);
+            $("#text").val("");
+            Top=parseInt(pageH*(Math.random()));
+            var num=parseInt(colorArr.length*(Math.random()));
+            if(Top>pageH-90){
+                Top=pageH-90;
+            }
+            if(parseInt(flag)){
+                creSpan.css({"top":Top,"right":-300,"color":'yellow'});
+            }else{
+                creSpan.css({"top":Top,"right":-300,"color":'#fff'});
+            }
+            
+            boxDom.append(creSpan);
+            var spanDom=$("#boxDom>span:last-child");
+            spanDom.stop().animate({"right":pageW+300},getRandom(10000),"linear",function(){
+                        $(this).remove();
+                    });
+        }
+        function getRandom(time){
+            return Math.random() * time + 1000;
+        }
+        function getRandomColor(){
+            return '#' + (function(h){
+                return new Array(7 - h.length).join("0") + h
+            })((Math.random() * 0x1000000 << 0).toString(16));
+        }
+        
+        $('#clear').click(function(){
+            if($(this).data('flag') == 1){
+                clearInterval(time);
+                $(this).data('flag',0);
+                $(this).text('开启');
+            }else{
+                showCommet();
+                time = setInterval(showCommet,6000);
+                $(this).data('flag',1);
+                $(this).text('关闭');
+            }
+        });
+        
+        function addSaying(){
+            //console.log(sayings);
+            var now = $("#text").val();
+            if(now != ''){
+                auto(now,1);
+                sayings.push(now);           
+                $("#text").val("");
+                //上传评论
+                $.ajax({
+                    url:'http://192.168.155.1:3000/yuhu/student/postComments',
+                    type:'POST',
+                    data:{
+                        //tno:81101720,
+                        //sid:19,
+                        tno:localStroage.getItem('tno'),
+                        sid:localStroage.getItem('tid'),
+                        comment:now                  
+                    },
+                    success:function(data){
+                        if(data.code == 200){
+                            //alert('弹幕发送成功');
+                        }else{
+                            //alert('弹幕发送失败');
+                        }
+                    },
+                    error:function(){
+                        alert('连接错误');
+                    }
+                    
+                });
+            }
+            
+        }
+        
+
+        
+        $('.icon-return').click(function(){
+            //跳转
+            uexWindow.close(-1);
+            uexWindow.evaluateScript('note', 0, 'init();');
+            appcan.frame.close('note');
+            appcan.window.open({
+               name:'index',
+               data:'index.html'
+            });
+                
+        });
+
+   });
+</script>
+</html>

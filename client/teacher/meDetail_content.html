@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/main/iconfont.css"/>
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/firstload.css">
+        <style>
+            .icon-return{
+                font-size: 1em;
+            }
+            .avater{
+                display: block;
+                margin: 0 auto;
+                position: relative;
+                top:45px;
+            }
+            .register{
+                margin-top: 300px;
+            }
+            #re-pass, #pass, #oldpass{
+                display: none;
+            }
+        </style>
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <!--header开始-->
+        <div id="header" class="uh bc-text-head ub bc-head">
+            <!-- 左边-->
+            <div class="nav-btn" id="nav-left">
+                <i class="iconfont icon-return"></i>
+            </div>
+            <h1 class="ut ub-f1 ulev-3 ut-s tx-c">个人信息</h1>
+            <!-- 右边-->
+            <div class="nav-btn nav-bt" id="nav-right">
+                <div class="t-btn-ds2 ub-img uwh-tBtn"></div>
+            </div>
+        </div>
+        <div class="content register-back">
+            <img src="../images/tea-avater.png" class="avater"/>
+            <div class="register">
+                <div> 
+                    <input name="tel" type="text" placeholder="姓名" id="nickname" disabled="disabled"/> 
+                    <input name="tel" type="text" placeholder="手机号" id="tel" disabled="disabled"/> 
+              
+                    <input name="pass" type="password" placeholder="原密码" id="oldpass"/> 
+                    <input name="pass" type="password" placeholder="新密码" id="pass"/> 
+                    <input name="re-pass" type="password" placeholder="重复新密码" id="re-pass"/>
+                    <button type="button" id="submit" data-id='1'>修改</button>
+                    <p class="tip"></p>
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js"></script>
+        <script src="../js/appcan.control.js"></script>
+        <script src="../js/jquery-2.1.4.min.js"></script>
+    </body>
+    <script>
+        appcan.ready(function(){
+           
+            
+           var stu_tel = localStorage.getItem('tel');
+           var stu_pass = localStorage.getItem('pass');
+           var nickname =  localStorage.getItem('nickname');
+           
+           //stu_tel = '15858122993';
+           //stu_pass = '1';
+           //nickname = 'nickname';
+           
+           $("#tel").attr("placeholder","手机号：" + stu_tel);
+           $("#nickname").attr("placeholder","姓名：" + nickname);
+           
+            function checkTelUnique(){
+                var result = true;
+                $.ajax({
+                    url : 'http://192.168.155.1:3000/yuhu/teacher/checkTel',
+                    type : 'GET',
+                    async:  false,
+                    dataType: 'json',
+                    timeout: 7000, 
+                    data : {
+                        tel : $('#tel').val()
+                    },
+                    success : function(data) {   
+                        if(data.data.length==1){
+                            result =  false;
+                        }
+                    }, 
+                    error : function(error) {
+                        $('.tip').html('出现错误！');
+                    }
+               }); 
+            
+               return result;
+            }
+            function checkTel(){
+                var myreg = /^1[34578]\d{9}$/;
+                if($('#tel').val()==null||$('#tel').val()==''){
+                    $('.tip').html('手机号不能为空！');
+                    return false;
+                }
+                if($('#tel').val().length!=11||!myreg.test($('#tel').val())){
+                    $('.tip').html('请输入有效的手机号码！');
+                    return false;
+                }
+                if(!checkTelUnique() && ($('#tel').val()!= stu_tel) ){
+                    $('.tip').html('手机号已被注册！');
+                    return false;
+                }
+                $('.tip').html('');
+                return true;
+             }
+             function checkPass(){
+                 if($('#pass').val()==null||$('#pass').val()==''){
+                    $('.tip').html('密码不能为空！');
+                    return false;
+                }
+                $('.tip').html('');
+                return true;
+             }
+             function checkRePass(){
+                 if($('#re-pass').val()==null||$('#re-pass').val()==''){
+                    $('.tip').html('请确认密码！');
+                    return false;
+                }
+                if($('#re-pass').val()!=$('#pass').val()){
+                    $('.tip').html('两次密码不一致！');
+                    return false;
+                }
+                $('.tip').html('');
+                return true;
+             }
+             function checkNickname(){
+                 if($('#nickname').val()==null||$('#nickname').val()==''){
+                    $('.tip').html('姓名不能为空！');
+                    return false;
+                }
+                $('.tip').html('');
+                return true;
+             }
+
+
+             $('#nickname').blur(function(){
+                  checkNickname();
+             });
+             $('#tel').blur(function(){
+                  checkTel();
+             });
+             $('#oldpass').blur(function(){
+                 if($('#oldpass').val() == stu_pass){
+                     return true;
+                 }else{
+                     $('.tip').html('原密码输入错误！');
+                     return false;
+                 }
+             });
+             $('#pass').blur(function(){
+                  checkPass();
+             });
+             $('#re-pass').blur(function(){
+                  checkRePass();
+             });
+             
+             $('#submit').click(function(event){
+                event.stopPropagation();
+                if($(this).data('id') == 1){
+                    $('#nickname').attr("disabled", false); 
+                    $('#tel').attr("disabled", false); 
+                    $('#pass').show();
+                    $('#re-pass').show();
+                    $('#oldpass').show();
+                    $('#tel').val(stu_tel);
+                    $('#nickname').val(nickname);
+                    $(this).text('提交');
+                    $(this).data('id', 0);
+                }else{
+                    modify();//提交
+                }
+                
+            });
+            
+            $('.icon-return').click(function(){
+                uexWindow.close(-1);
+            });
+            
+            function modify(){
+                if(checkTel()){
+                    if(checkPass()){
+                        if(checkRePass()){
+                            $.ajax({
+                                url : 'http://192.168.155.1:3000/yuhu/teacher/updatePersonInfo',
+                                type : 'POST',
+                                async:  true,
+                                data : {
+                                    tel : $('#tel').val(),
+                                    pass : $('#pass').val(),
+                                    tid:localStorage.getItem('tid'),
+                                    nickname:$('#nickname').val(),
+                                },
+                                success : function(data){
+                                    if(data.code==200){
+                                        $('#nickname').attr("disabled", true); 
+                                        $('#tel').attr("disabled", true); 
+                                        $('#oldpass').hide();
+                                        $('#pass').hide();
+                                        $('#re-pass').hide();
+                                        $('#submit').text('修改');
+                                        $('#submit').data('id', 1);
+                                    }else{
+                                        alert('修改失败！');
+                                    }    
+                                                                    
+                                }, 
+                                error : function(error) {
+                                    $('.tip').html('出现错误！');
+                                }   
+                            }); 
+                        }
+                    }
+                }
+            }
+            
+        })
+           
+    </script>
+</html>

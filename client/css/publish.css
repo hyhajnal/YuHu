@@ -1,0 +1,214 @@
+.input {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    margin: 0.4em;
+    max-width: 10em;
+    width: calc(100% - 2em);
+    vertical-align: top;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.input__field {
+    position: relative;
+    display: block;
+    float: right;
+    padding: 0.5em 1.6em;
+    font-size:1em;
+    width: 60%;
+    border: none;
+    border-radius: 0;
+    background: #f0f0f0;
+    color: #aaa;
+    font-weight: bold;
+    -webkit-appearance: none; /* for box shadows to show on iOS */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.input__field:focus {
+    outline: none;
+}
+.input__label {
+    display: inline-block;
+    float: right;
+    padding: 0 1em;
+    width: 40%;
+    color: #6a7989;
+    font-weight: bold;
+    font-size: 80%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.input__label-content {
+    position: relative;
+    display: block;
+    padding: 0.8em 0;
+    width: 100%;
+    text-align: center;
+}
+
+/*发布*/
+.container{
+    width:100%;
+    height:100%;
+    position: relative;
+    top:0;
+    left:0;
+    overflow-x: hidden;
+}
+.publish-back{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;  
+    background: #FFFFFF url(../images/publish-index.png) no-repeat left top;
+    /*background: #F9F19C url(../images/task-list-back2.png) no-repeat left top;*/
+    background-size: cover; 
+    background-attachment: fixed;
+    
+}
+.publish-header{
+    text-align: center;
+    /*border:1px solid red;*/
+    width:100%;
+    height: 5em;
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 9999;
+}
+.publish-header .back img{
+    width:2.4em;
+    height:1.8em;
+    display: inline-block;
+    position: absolute;
+    left:1em;
+    top:1em;
+}
+.publish-header h1{
+    font-size: 1.2em;
+    display: inline-block;
+    line-height: 5em;  
+}
+
+.publish-page{
+    width:100%;
+    position: relative;
+    top:0;
+    left:0;
+}
+
+.publish-page .input-list{
+    margin-top:6em;
+    width:100%;
+    height:17em;
+    display:block;
+    text-align:center;
+    /*border: 1px solid #000;*/
+}
+
+/* Haruki */
+.input--haruki{
+    margin: 1em;
+}
+
+.input__field--haruki {
+    padding: 0.6em;
+    width: 100%;
+    background: transparent;
+    color: #AFB5BB;
+    font-size: 1em;
+}
+
+.input__label--haruki {
+    position: absolute;
+    width: 100%;
+    pointer-events: none;
+}
+
+.input__label-content--haruki {
+    font-size: 1.1em;
+    -webkit-transition: -webkit-transform 0.3s;
+    transition: transform 0.3s;
+}
+
+.input__label--haruki::before,
+.input__label--haruki::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 4px;
+    background: #6a7989;
+    -webkit-transition: -webkit-transform 0.3s;
+    transition: transform 0.3s;
+}
+
+.input__label--haruki::before {
+    top: 0;
+}
+
+.input__label--haruki::after {
+    bottom: 0;
+}
+
+.input__field--haruki:focus + .input__label--haruki .input__label-content--haruki,
+.input--filled .input__label-content--haruki {
+    -webkit-transform: translate3d(0, -90%, 0);
+    transform: translate3d(0, -90%, 0);
+}
+
+.input__field--haruki:focus + .input__label--haruki::before,
+.input--filled .input__label--haruki::before {
+    -webkit-transform: translate3d(0, -0.5em, 0);
+    transform: translate3d(0, -0.5em, 0);
+}
+
+.input__field--haruki:focus + .input__label--haruki::after,
+.input--filled .input__label--haruki::after {
+    -webkit-transform: translate3d(0, 0.5em, 0);
+    transform: translate3d(0, 0.5em, 0);
+}
+.container .content{ 
+    width:86%;
+    margin:2em auto 3.4em;
+    /*border: 1px solid red;*/
+    margin-top:2em;
+}
+.container .content .word{
+    display: inline-block;
+    border:4px solid #6a7989;
+    padding:0.4em;
+    background-color: transparent;
+    margin: 0.4em;
+}
+
+.container .add{
+    position: absolute;
+    right: 1.4em;
+    top: 8em;
+}
+.container .add img{   
+    width: 2em;
+    height: 2em;
+}
+.container .pub-but{
+    margin-bottom:2em;
+    left: 50%;
+    margin-left:-2.1em;
+}
+.container .pub-but img{
+    width: 4.2em;
+    height: 5.2em;
+}

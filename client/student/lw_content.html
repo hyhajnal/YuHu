@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">  
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        
+        <link rel="stylesheet" href="../css/main/iconfont.css"/>
+        
+        <style>
+            #header{
+                z-index: 999;
+            }
+            .icon,#progress{
+                font-size:2em;
+                text-align: center;
+            }
+            
+            .letter{
+                position: relative;
+            }
+            .icon-xuanzhong{
+                position: absolute;
+                bottom: 2px;
+                right: -2px;
+                font-size: 48px;
+                color:#f2b93f;
+                transform-origin: right bottom;
+                visibility: hidden;
+            }
+            .active{
+                visibility: visible;
+            }
+            .hanzi{
+                font-weight:bold;
+                padding: 0px;
+                font-size: 3em;
+                position: absolute;
+                z-index: 100;
+                margin: auto;
+                position: absolute;
+                top: 0; left: 0; bottom: 0; right: 0;
+                text-align: center;
+                line-height:1.4;
+            }
+            #oneWord{
+                margin: 30px 0;
+            }
+            #tip{
+                position: relative;
+            }            
+            .tip_box{
+                position: absolute;
+                z-index: 100;
+                padding:5px;
+                font-size: 0.8em;
+                background-color: rgba(0,0,0,0.5);
+                color:#fff;
+                left:2em;
+                top:2em;
+                display:none;
+                width:300px;
+            }
+            /*提示框*/
+        </style>
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <!--header开始-->
+        <div id="header" class="uh bc-text-head ub bc-head">
+            <!-- 左边-->
+            <div class="nav-btn" id="nav-left">
+                <i class="icon iconfont icon-return"></i>
+            </div>
+            <h1 class="ut ub-f1 ulev-3 ut-s tx-c">听写</h1>
+            <!-- 右边-->
+            <div class="nav-btn nav-bt" id="nav-right">
+                <div class="t-btn-ds2 ub-img uwh-tBtn"></div>
+            </div>
+        </div>
+        <div id="tipbar" class='uinn2 c-gra ub-pj ub uba b-bla'>
+             <div class=' umw3' id="tip">
+                 <i class="icon iconfont icon-tip"></i>
+                 <div class="tip_box" >
+                                                             提示：本词意思！
+                 </div>
+             </div>
+             <div class=' umw3 ' id="progress"></div>
+        </div>
+        <div id="toolbar" class='uinn2 c-gra ub-pj ub'>
+             <div class='umh5 umw3' id="replay"><i class="icon iconfont icon-replay"></i></div>
+             <div class='umh5 umw3 ' id="clear"><i class="icon iconfont icon-clear"></i></div>
+             <div class='umh5 umw3 ' id="nextWord"><i class="icon iconfont icon-next"></i></div>
+        </div>
+        <div id="oneWord" class='uinn2 c-gra ub-pc ub '>
+        </div>
+
+        <div class='uinn2 c-gra ub-pc ub' id="currentWrite">
+            <div class='umh5 umw3 umar-r umar-l'>
+                <canvas id="myCanvas" width='900' height='900'>
+                </canvas>
+                
+            </div>
+        </div>
+    
+        <script src="../js/appcan.js"></script>
+        <script src="../js/appcan.control.js"></script>
+        <script src="../js/jquery-2.1.4.min.js"></script>
+        <script src="../js/main/listen.js"></script>
+        <script>
+            appcan.ready(function() {
+               //uexWindow.setMultilPopoverFlippingEnbaled(1);
+               resizeCanvas();
+               init();
+               initSpeaker(); 
+               getArray();               
+            });
+            
+            function resizeCanvas() {  
+                    myCanvas.width = $(window).get(0).innerWidth - 100;                 
+                    myCanvas.height = $(window).get(0).innerWidth - 100;   
+               
+             };
+             
+             $('.icon-return').click(function(){
+                appcan.frame.close('lw'); 
+                appcan.window.open({
+                   name:'index',
+                   data:'index_content.html'
+                });
+            });
+             
+            //提示框
+            
+            $('#tip').click(function(){
+                $('.tip_box').fadeIn("slow");
+                setTimeout(function(){$('.tip_box').fadeOut("slow")},2000);
+            })
+            
+            $('#clear').click(function(){
+                  clear(); 
+            });
+        
+            $('#replay').click(function(){
+                   playWord();
+            });
+                           
+               
+            //点击下一个字
+            $('#oneWord').on('click','.letter',function(){
+            /*添加按钮点击处理代码*/
+                var $this = $(this);
+                var index = $this.data('id');
+                $('#oneWord i').filter(".active").removeClass('active');
+                $this.children("i").addClass('active');
+                letterIndex = index;
+                clear();
+                handWriting.exexute();
+            });
+            
+                   
+            
+            //点击下一个词
+            $('#nextWord').click(function(){
+                if(wordIndex >  wordArray.length - 2){
+                    score();
+                    $(this).remove();
+                    //最后得分
+                    var scoreEnd = (wordArray.length - scoreArray.length) / wordArray.length * 100;
+                    console.log("学生的答案:"+studentAnswer.toString()+'<br />');
+                    console.log("正确答案："+wordArray.toString()+'<br />');
+                    console.log("本次听写分数："+scoreEnd+'<br />');
+                    console.log("写错的词"+scoreArray.toString()+'<br />');
+                    console.log('传到后台的词及意思'+postWrongArray.toString()+'<br />');
+                    localStorage.setItem('studentAnswer',studentAnswer.toString());//本次听写学生答案
+                    localStorage.setItem('rightAnswer',wordArray.toString());//本次听写正确答案
+                    localStorage.setItem('score',scoreEnd);//本次听写的分数
+                    localStorage.setItem('wrongWord',scoreArray.toString());//scoreArray 是学生错词所对应正确词的数组['语文','英语']
+                    localStorage.setItem('postWrongArray',postWrongArray.toString());
+                    //任务页的post
+                    var dataObj = {
+                        sid:localStorage.getItem('tid'),
+                        tno:localStorage.getItem('tno'),
+                        score:(wordArray.length - scoreArray.length) * 5,
+                        detail:postWrongArray.toString()
+                    };
+                    
+                    if(localStorage.getItem('review') != 1){
+                        $.ajax({
+                            url:'http://192.168.155.1:3000/yuhu/student/addStuTask',
+                            type:'POST',
+                            data:dataObj,
+                            success:function(data){
+                                if(data.code == 200){
+                                   uexWindow.close(-1); 
+                                   appcan.window.open({
+                                       name:'score',
+                                       data:'score.html'
+                                   });
+                                }else{
+                                    alert('提交失败');
+                                }
+                            },
+                            error:function(){
+                                alert('连接失败');
+                            }
+                            
+                        });
+                    }else{
+                         //如果是复习跳转的听写，移除标志
+                           localStorage.removeItem('review');
+                           uexWindow.close(-1);
+                           appcan.window.open({
+                               name:'score',
+                               data:'score.html'
+                           });
+                    }
+                    
+                }else{
+                    score();
+                    wordIndex++;
+                    Init();
+                }
+            });
+            
+             $('.icon-return').click(function(){ 
+                 appcan.window.open({
+                   name:'index',
+                   data:'index.html'
+                }); 
+                uexWindow.close(-1);
+             });              
+        </script>
+    </body>
+
+</html>

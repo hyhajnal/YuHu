@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/main/iconfont.css"/>
+        
+        <style>
+            body{
+                font-family: "微软雅黑";
+                background-color: #fff !important;
+                font-size: 1em;
+            }
+            #review{
+                position: fixed;
+                top:0px;
+                z-index:100;
+                width:100%;
+                text-align: center;
+                border-bottom:2px solid #ffc301;
+                position: fixed;
+                background-color: #ffc301 ;
+                padding: 20px;
+                color:#fff;
+                font-weight: bold;
+            }
+            .word_list{
+                box-sizing:border-box;
+                width: 90%;
+                min-height:1000px;
+                margin: 120px auto;
+                padding: 20px;
+                
+                z-index: -1;
+            }
+            .word_list li{
+                width:90%;
+                min-height:100px;
+                padding: 20px;
+                margin: 0 auto;
+                background-color: #f9f0d1;
+                border-radius: 20px;
+                margin-bottom: 25px;
+            }
+            .word{
+                color:#df8d55;
+                font-weight:bold;
+                margin-bottom: 10px;
+            }
+            .word_from{
+                font-size: 0.7em;
+                float: right;
+                color:#222;
+            }
+            .word_meaning{
+                color:#222;
+                font-size:0.5em;
+                margin-bottom:10px;
+            }
+            .icon-listen{
+                font-size: 1em;
+                color:#fff;
+                font-weight: normal;
+            }
+            .icon-new{
+                color: #F16412;
+                font-size: 1em;
+                font-weight: normal;
+            }
+            .loadEffect{
+                width: 100px;
+                height: 100px;
+                position: relative;
+                margin: 0 auto;
+                margin-top:100px;
+            }
+            .loadEffect span{
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #FFC20E;
+                position: absolute;
+                -webkit-animation: load 1.04s ease infinite;
+            }
+            @-webkit-keyframes load{
+                0%{
+                    -webkit-transform: scale(1.2);
+                    opacity: 1;
+                }
+                100%{
+                    -webkit-transform: scale(.3);
+                    opacity: 0.5;
+                }
+            }
+            .loadEffect span:nth-child(1){
+                left: 0;
+                top: 50%;
+                margin-top:-10px;
+                -webkit-animation-delay:0.13s;
+            }
+            .loadEffect span:nth-child(2){
+                left: 14px;
+                top: 14px;
+                -webkit-animation-delay:0.26s;
+            }
+            .loadEffect span:nth-child(3){
+                left: 50%;
+                top: 0;
+                margin-left: -10px;
+                -webkit-animation-delay:0.39s;
+            }
+            .loadEffect span:nth-child(4){
+                top: 14px;
+                right:14px;
+                -webkit-animation-delay:0.52s;
+            }
+            .loadEffect span:nth-child(5){
+                right: 0;
+                top: 50%;
+                margin-top:-10px;
+                -webkit-animation-delay:0.65s;
+            }
+            .loadEffect span:nth-child(6){
+                right: 14px;
+                bottom:14px;
+                -webkit-animation-delay:0.78s;
+            }
+            .loadEffect span:nth-child(7){
+                bottom: 0;
+                left: 50%;
+                margin-left: -10px;
+                -webkit-animation-delay:0.91s;
+            }
+            .loadEffect span:nth-child(8){
+                bottom: 14px;
+                left: 14px;
+                -webkit-animation-delay:1.04s;
+            }
+        </style>
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <div id="review">
+                                           随机复习&nbsp;&nbsp;<i class="iconfont icon-listen"></i>
+        </div>
+         <div class="ub">
+              <ul class='word_list' id='word_list'>
+                  <div class="loadEffect">
+                      <span></span><span></span>
+                      <span></span><span></span>
+                      <span></span><span></span>
+                      <span></span><span></span>
+                      
+                  </div>
+              </ul>
+         </div>           
+    </body>
+    <script src="../js/appcan.js"></script>
+    <script src="../js/appcan.control.js"></script>
+    </body>
+    <script>
+        appcan.ready(function() {
+               init();
+        });
+        
+        function init(){
+            //alert('init!');
+            var wrongWord = localStorage.getItem('postWrongArray');
+            //alert(wrongWord);
+            //var wrongWord = 'ndjvn:nkdsvn,vdknvfk:ncjdn,nvjvnj:vnjdnv';
+            var flag=0;
+            if(wrongWord!=null && wrongWord!=''){
+                $('#word_list').empty();
+                 wrongWord.split(',').forEach(function(list){ 
+                    //console.log(list);                          
+                    var $li = $('<li class="word_item"></li>');
+                    var $div1 = $('<div class="word"></div>');
+                    $div1.html(list.split(':')[0]+'&nbsp;&nbsp;<i class="iconfont icon-new"></i>');
+                    var $div2 = $('<div class="word_meaning"></div>');
+                    $div2.text(list.split(':')[1]);
+                   // var $em = $('<em class="word_from"></em>');
+                    //$em.text(list.time);
+                    //$div2.append($em);
+                    $li.append($div1).append($div2).appendTo('#word_list');
+                });
+            }
+           
+             
+            $.ajax({
+                url:'http://192.168.155.1:3000/yuhu/student/queryAllDetails',
+                type:'GET',
+                data:{
+                    sid:localStorage.getItem('tid')
+                    //sid:19
+                    },
+                success:function(data){
+                    if(data.code == 200){
+                        if(wrongWord == null){
+                            $('#word_list').empty();
+                        }
+                        var lists = new Array();
+                        data.data.forEach(function(v){
+                            if(v != ''){
+                                lists = lists.concat(v.detail.split(','));//合并数组
+                            }
+                            
+                        });
+                        //console.log(lists);
+                        lists.forEach(function(list){
+                            var $li = $('<li class="word_item"></li>');
+                            var $div1 = $('<div class="word"></div>');
+                            var $div2 = $('<div class="word_meaning"></div>');
+                            if(list.indexOf(":") > 0){
+                                $div1.text(list.split(':')[0]);
+                                $div2.text(list.split(':')[1]);                               
+                            }else{
+                                $div1.text(list);
+                            }                          
+                            //var $em = $('<em class="word_from"></em>');
+                            //$em.text(list.time);
+                            //$div2.append($em);
+                            $li.append($div1).append($div2).appendTo('#word_list');
+                        });
+                    }else{
+                        alert('获取失败');
+                    }
+                },
+                error:function(){
+                    alert('连接错误');
+                }
+                
+            });
+            
+            
+            $('#review').click(function(){
+                localStorage.setItem('review','1');
+                appcan.frame.close('note'); 
+                appcan.window.open({
+                   name:'lw',
+                   data:'lw_content.html'
+                });
+            });
+        }
+    </script>
+</html>

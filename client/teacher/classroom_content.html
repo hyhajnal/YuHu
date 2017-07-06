@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/teacher.css">
+        <link href='https://cdn.webfont.youziku.com/webfonts/nomal/21324/45824/5831b234f629d8120c37104b.css' rel='stylesheet' type='text/css' />       
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+         <div class="classroom">            
+             <div class="no-room">      
+                 <div class="pic"><!-- <img src="../images/classroom.png"/> --></div> 
+                 <div class="board">
+                     <p class="css7274964e5534c">你还未创建教室！</p>
+                     <div class="creat-room">
+                        <div> 
+                            <input name="name" type="text" id="name" placeholder="名称"/>
+                            <input name="capacity" type="text" id="capacity" placeholder="容量"/> 
+                            <button type="button" id="creat">创建</button>  
+                        </div>
+                     </div>
+                 </div>  
+                 <!-- <div class="back"><img src="../images/back.png"/></div> -->                        
+              </div>
+               <div class="room">
+                    <div class="pic"></div> 
+                    <h1 style="text-align:center;font-size:72px;">我的教室</h1>   
+                    <div id="main" style="width: 100%;height:1000px;margin-top:0.1rem;"></div>           
+              </div>
+         </div>           
+    </body>
+    <script src="../js/appcan.js"></script>
+    <script src="../js/appcan.control.js"></script>
+    <script src="../js/main/d3.min.js"></script>
+    <script src="../js/jquery-2.1.4.min.js"></script>  
+    <script>
+        appcan.ready(function(){
+            // uexWindow.setMultilPopoverFlippingEnbaled(1);
+            console.log('classroom');
+        });
+        
+        var url = 'http://192.168.155.1:3000/yuhu/teacher';   
+        
+        $(function(){
+             init();
+                 
+                   
+       
+        });  
+        
+        
+          function init(){
+            // alert('init');
+            $.ajax({
+                url : url+'/queryRoom',
+                type : 'GET',
+                async:  false,
+                dataType: 'json',
+                timeout: 7000, 
+                data : {
+                    tid: localStorage.getItem('tid')
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        if(data.data[0].result>0){
+                            $('.no-room').css('display','none');
+                            $('.room').css('display','block');
+                            hasroom();
+                        }else{
+                            $('.no-room').css('display','block');
+                            $('.room').css('display','none');
+                            noroom();
+                            
+                        }  
+                    }                                                     
+                }, 
+                error : function(error) {
+                    
+                } 
+             });
+        }
+        
+        function noroom(){
+            $('#creat').click(function(){
+                 $.ajax({
+                        url : url+'/creatRoom',
+                        type : 'GET',
+                        async:  true,
+                        dataType: 'json',
+                        timeout: 7000, 
+                        data : {
+                            tid: localStorage.getItem('tid'),
+                            tel: localStorage.getItem('tel'),
+                            name: $('#name').val(),
+                            capacity: $('#capacity').val()
+                        },
+                        success : function(data) {
+                            if(data.code==200){  
+                                alert('你的教室号为'+data.data.insertId+'！'); 
+                                // appcan.window.evaluateScript('teacher','window.location.reload();');                      
+                                uexWindow.evaluateScript('teacher', '0', 'freshClassroom()');
+                                appcan.window.selectMultiPopover("content",0);
+                            }                                       
+                        }, 
+                        error : function(error) {
+                            
+                        } 
+                    });
+              }); 
+        }
+        
+        function hasroom(){
+            var w = $('#main').width(), h = $('#main').height();
+            var labelDistance = 0;
+
+            var vis = d3.select("#main").append("svg:svg").attr("width", w).attr("height", h);
+
+            var nodes = [];
+            var labelAnchors = [];
+            var labelAnchorLinks = [];
+            var links = [];
+            
+            $.ajax({
+                url:'http://192.168.155.1:3000/yuhu/teacher/queryAllStudents',
+                type:'GET',
+                async: false,
+                data:{tid: localStorage.getItem('tid')},
+                success:function(data){
+                    if(data.code == 200){
+                       data.data.forEach(function(v){
+                            var node = {
+                                label : v.nickname
+                            };
+                            nodes.push(node);
+                            labelAnchors.push({
+                                node : node
+                            });
+                            labelAnchors.push({
+                                node : node
+                            });
+                        });
+                    }else{
+                        alert('提交失败');
+                    }
+                },
+                error:function(){
+                    alert('连接失败');
+                }
+                
+            });
+
+            console.log(nodes);
+
+            for(var i = 0; i < nodes.length; i++) {
+                for(var j = 0; j < i; j++) {
+                    if(Math.random() > 1)
+                        links.push({
+                            source : i,
+                            target : j,
+                            weight : Math.random()
+                        });
+                }
+                labelAnchorLinks.push({
+                    source : i * 2,
+                    target : i * 2 + 1,
+                    weight : 1
+                });
+            };
+
+            var force = d3.layout.force().size([w, h]).nodes(nodes).links(links).gravity(1).linkDistance(400).charge(-3000).linkStrength(function(x) {
+                return x.weight * 100
+            });
+
+
+            force.start();
+
+            var force2 = d3.layout.force().nodes(labelAnchors).links(labelAnchorLinks).gravity(0).linkDistance(50).linkStrength(10).charge(-100).size([w, h]);
+            force2.start();
+
+            var link = vis.selectAll("line.link").data(links).enter().append("svg:line").attr("class", "link").style("stroke", "#007DB8").style("stroke-width", 8);
+
+            var node = vis.selectAll("g.node").data(force.nodes()).enter().append("svg:g").attr("class", "node");
+            node.append("svg:circle").attr("r", 15).style("fill", "#FFD700").style("stroke", "#007DB8").style("stroke-width", 8);
+            node.call(force.drag);
+
+
+            var anchorLink = vis.selectAll("line.anchorLink").data(labelAnchorLinks)//.enter().append("svg:line").attr("class", "anchorLink").style("stroke", "#999");
+
+            var anchorNode = vis.selectAll("g.anchorNode").data(force2.nodes()).enter().append("svg:g").attr("class", "anchorNode");
+            anchorNode.append("svg:circle").attr("r", 0).style("fill", "#FFF");
+                anchorNode.append("svg:text").text(function(d, i) {
+                return i % 2 == 0 ? "" : d.node.label
+            }).style("fill", "#555").style("font-family", "Arial").style("font-size", 24);
+
+            var updateLink = function() {
+                this.attr("x1", function(d) {
+                    return d.source.x;
+                }).attr("y1", function(d) {
+                    return d.source.y;
+                }).attr("x2", function(d) {
+                    return d.target.x;
+                }).attr("y2", function(d) {
+                    return d.target.y;
+                });
+
+            }
+
+            var updateNode = function() {
+                this.attr("transform", function(d) {
+                    return "translate(" + d.x + "," + d.y + ")";
+                });
+
+            }
+
+
+            force.on("tick", function() {
+
+                force2.start();
+
+                node.call(updateNode);
+
+                anchorNode.each(function(d, i) {
+                    if(i % 2 == 0) {
+                        d.x = d.node.x;
+                        d.y = d.node.y;
+                    } else {
+                        var b = this.childNodes[1].getBBox();
+
+                        var diffX = d.x - d.node.x;
+                        var diffY = d.y - d.node.y;
+
+                        var dist = Math.sqrt(diffX * diffX + diffY * diffY);
+
+                        var shiftX = b.width * (diffX - dist) / (dist * 2);
+                        shiftX = Math.max(-b.width, Math.min(0, shiftX));
+                        var shiftY = 5;
+                        this.childNodes[1].setAttribute("transform", "translate(" + shiftX + "," + shiftY + ")");
+                    }
+                });
+
+
+                anchorNode.call(updateNode);
+
+                link.call(updateLink);
+                anchorLink.call(updateLink);
+
+            });
+        }
+    </script>
+</html>

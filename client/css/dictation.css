@@ -1,0 +1,105 @@
+
+/**********听写页***********/
+.dictation-page-index .back img{
+    width:2.4em;
+    height:1.8em;
+}
+.dictation{
+    padding:0 1em;
+    position: relative;
+    /*font-family:'造字工房童心';*/
+}
+.container{
+    text-align:center;
+    margin:0 auto;
+}
+.dictation .tip{
+    text-align:right;
+    color:#323232;
+    font-weight: bolder;
+    font-size: 1.6em;
+    margin:0.6em 0 1em 0;
+}
+.dictation .tip .index{
+    color:#EFB73C;
+}
+.dictation .control span{
+    color:#323232;
+    font-weight: bolder;
+    font-size: 1em;
+    display: inline-block;
+    margin-bottom:1.4em;
+    background: #f00;
+    padding:0.4em;
+}
+.dictation .grid{
+    /*font-size: 0;*/
+}
+.dictation .grid .sm-grid{
+    border:1px solid red;
+    /*display: inline-block;*/
+    /*font-size: 0;*/
+    margin-bottom:1.6em;
+}
+.dictation .grid .wrapper{
+    display: inline-block;
+    margin:0 0.3em;
+    position: relative;
+}
+.dictation .grid .sm-grid .wrapper:first-child{
+    margin-left: 0;
+}
+.dictation .grid .sm-grid .wrapper:last-child{
+    margin-right: 0;
+}
+.dictation .grid .sm-grid .wrapper canvas{
+    
+}
+.dictation .grid .sm-grid .font{
+    border:1px solid green;
+    font-size:1.6em;
+    font-weight:bolder;
+    position: absolute;
+    left:0;
+    top:0;
+    z-index: 99;
+    pointer-events: none;
+    text-align: center;
+}
+.dictation .grid .lg-grid{
+    border:1px solid green;
+    position: relative;
+    display: inline-block;
+    font-size: 0;
+}
+.dictation .grid #paint{
+    position: absolute;
+    left:0;
+    top:0;
+    pointer-events: none;
+}
+.dictation .err_tip{
+    position: absolute;
+    
+    z-index: 999;
+    border-radius: 1em;
+    background: #eee;
+    text-align: center;
+    left:0;
+    top:0;
+    margin-left: -35%;
+    margin-top: -35%;
+}
+.dictation .err_tip .key{
+    color:#f00;
+}
+.dictation .err_tip div{
+    display: inline-block;
+    text-align: left;
+}
+.dictation .err_tip div span{
+    display: inline-block;
+}
+
+
+

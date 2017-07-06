@@ -1,0 +1,86 @@
+#person{
+    width:100%;
+    height:100%;
+    background-color: #f9f19c;
+    background-image:url(../images/person_bic.png);
+    background-size:100%;
+}
+#rank{
+    width:100%;
+    background-color: #ffac2a;
+    background-image:url(../images/rank_bic.png);
+    background-size:100%;
+    padding-bottom: 2rem;
+}
+#person_pic img{
+    width:40%; 
+    margin-top:1rem;
+    margin-left:30%;  
+}
+#person_message img{
+    width:100%; 
+     
+}
+#person_classroom img{
+    width:100%;
+    position: relative;
+    margin-top:-2.5rem;
+}
+#person_study img{
+    width:100%;
+    position: relative;
+    margin-top:-2.5rem;
+}
+#rank_title{
+    width:100%; 
+    position: relative;
+}
+#title1{
+    width:35%; 
+    margin:auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left:2.7rem;
+}
+#title2{
+    width:15%; 
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left:0.5rem;
+}
+#rank_list{
+    width:80%; 
+    background-color: #ffffff;
+    margin:auto;
+    margin-top: 2rem;
+    border-radius:15px;
+    padding-left:1rem;
+    padding-right:1rem; 
+    padding-top:2rem;
+    padding-bottom:1.7rem;
+}
+#rank_list ul{
+    width:100%;
+}
+#rank_list li{   
+    width:100%;
+    padding-top:0.8rem;
+    padding-bottom:0.8rem;
+    margin: auto;
+    border-bottom: 2px solid #f4d60b;
+    
+}
+#rank_list li img{
+    width:20%;
+    margin-left: 1rem;
+}
+#rank_list ul li .number{
+    margin-left: 6rem;
+    font-size:2.5rem;
+    color:#de6718;
+}
+#rank_list ul li .name{
+    font-family: "childhood";
+    font-size:1.2rem;
+    margin:0 auto;
+}

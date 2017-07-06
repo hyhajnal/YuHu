@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <!-- <link rel="stylesheet" href="css/ui-box.css"> -->
+        <link rel="stylesheet" href="css/ui-base.css">
+        <!-- <link rel="stylesheet" href="css/ui-color.css"> -->
+        <link rel="stylesheet" href="css/appcan.icon.css">
+        <link rel="stylesheet" href="css/appcan.control.css">
+        <link rel="stylesheet" href="css/firstload.css">
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <div class="choice choice-back">
+            <div class="choice-avater">
+                <div class="teacher clear">
+                    <img src="images/tea-avater.png" class="fl choice-tea"/>
+                    <div class="fl choice-tea-font"><img src="images/choice-tea-font.png"/></div>
+                </div>
+                <div class="student clear">
+                    <img src="images/stu-avater.png" class="fr choice-stu"/>
+                    <div class="fr choice-stu-font"><img src="images/choice-stu-font.png"/></div>
+                </div>
+            </div>
+        </div>
+        <script src="js/appcan.js"></script>
+        <script src="js/appcan.control.js"></script>
+        <script src="js/jquery-2.1.4.min.js"></script>
+    </body>
+    <script>
+         appcan.ready(function() {
+             $('.choice-tea-font').click(function(){
+                 localStorage.setItem('client','teacher');                 
+                 uexWindow.open('login', '0', 'login.html', 2, '', '', 4, 500);
+             });
+             $('.choice-stu-font').click(function(){
+                 localStorage.setItem('client','student');               
+                 uexWindow.open('login', '0', 'login.html', 2, '', '', 4, 500);
+             });
+         });
+    </script>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <!-- <link rel="stylesheet" href="../css/ui-box.css"> -->
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <!-- <link rel="stylesheet" href="../css/ui-color.css"> -->
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/student.css"> 
+        <link href='https://cdn.webfont.youziku.com/webfonts/nomal/21324/45824/5831b234f629d8120c37104b.css' rel='stylesheet' type='text/css' />                   
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+          <div class="add-room">
+             <div class="pic"></div>
+             <div class="info">
+                 <p class="css7274964e5534c">你还未加入任何教室！</p>
+                 <div> 
+                     <span class="input input--kuro">
+                        <input class="input__field input__field--kuro" name="name" type="text" id="rno" />
+                        <label class="input__label input__label--kuro" for="rno">
+                            <span class="input__label-content input__label-content--kuro css7274964e5534c">
+                                                                                                    教室ID
+                            </span>
+                        </label>
+                     </span>
+                     <a class="shine-button css7274964e5534c" id="add">确认</a>
+                     <!-- <input name="name" type="text" id="rno" placeholder="教室ID"/> -->
+                     <!-- <button type="button" id="add">加入</button>  --> 
+                     <span class="tip"></span>
+                 </div> 
+             </div>    
+           </div>
+    </body>
+    <script src="../js/appcan.js"></script>
+    <script src="../js/appcan.control.js"></script>
+    <script src="../js/main/classie.js"></script>
+    <script src="../js/main/inputeffect.js"></script>
+    </body>   
+    <script>
+        appcan.ready(function() {
+        });
+        
+        var url = 'http://192.168.155.1:3000/yuhu/student';            
+        
+        function checkRno(){
+            var result=false;
+            $.ajax({
+                url : url+'/queryRoomById',
+                type : 'GET',
+                async:  false,
+                dataType: 'json',
+                timeout: 7000, 
+                data : {
+                    rno: $('#rno').val()
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        if(data.data[0].result==1){
+                            $('.tip').html('');
+                            result=true;
+                        }else{
+                            $('.tip').html('查无此教室!');
+                        }
+                    }                                       
+                }, 
+                error : function(error) {
+                    
+                } 
+            });
+            return result;
+        }
+        
+        $('#add').click(function(){
+            if(checkRno()){
+               $.ajax({
+                    url : url+'/addRoom',
+                    type : 'GET',
+                    async:  true,
+                    dataType: 'json',
+                    timeout: 7000, 
+                    data : {
+                        sid: localStorage.getItem('tid'),
+                        rno: $('#rno').val()
+                    },
+                    success : function(data) {
+                        if(data.code==200){
+                            // appcan.window.evaluateScript('student','window.location.reload();');
+                            uexWindow.evaluateScript('student', '0', 'invokeLoadData()'); 
+                            uexWindow.evaluateScript('addRoom', 0, 'close();');
+                            // appcan.window.open({
+                                // name:'student',
+                                // aniId:2,
+                                // data:'index.html',
+                                // dataType:0
+                           // }); 
+                        }                                       
+                    }, 
+                    error : function(error) {
+                        
+                    } 
+                }); 
+            }           
+        });
+    </script>
+</html>

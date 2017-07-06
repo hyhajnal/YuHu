@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/student.css">
+    </head>
+    <body class="um-vp bc-bg" ontouchstart>
+        <div class="ub task-list">
+             <div class="task-list-back"></div>
+             <div class="tasks">
+                <!-- <div class="task">
+                    <p class="name">1. 背诵 《观潮》</p>
+                    <span class="icon">
+                        <img src=""/>
+                    </span>
+                </div>
+                <div class="task">
+                    <p class="name">1. 听写 《观潮》</p>
+                    <span class="icon">
+                        <img src="../images/icon2.png"/>
+                    </span>
+                </div>
+             </div> -->
+        </div>
+    </body>
+    <script src="../js/appcan.js"></script>
+    <script src="../js/appcan.control.js"></script>
+    <script src="../js/jquery-2.1.4.min.js"></script> 
+    </body>
+    <script>
+        appcan.ready(function() {
+        });
+        var url = 'http://192.168.155.1:3000/yuhu/student';
+        
+        var date = localStorage.getItem('date');
+        localStorage.removeItem('date');
+        var tno = localStorage.getItem('tno');
+        localStorage.removeItem('tno');
+        var hasMon=localStorage.getItem('hasMon');
+        localStorage.removeItem('hasMon');
+        
+        if(hasMon=='true'){
+            url=url+'/queryTaskByDate';
+        }else{
+            url=url+'/queryTaskByTno';
+        }    
+        $.ajax({
+                url : url,
+                type : 'GET',
+                async:  false,
+                dataType: 'json',
+                timeout: 7000, 
+                data : {
+                    sid: localStorage.getItem('tid'),
+                    date: date,
+                    tno: tno
+                },
+                success : function(data){
+                    if(data.code==200){
+                        for(var i=0;i<data.data.length;i++){
+                            
+                            var content = data.data[i].name;   
+                            var is_finished = data.data[i].score;                   
+                            var type = content.substring(0,2);
+                            var $type = $('<span></span>'); 
+                            var $img = $('<img>');
+                            if(is_finished!=null){
+                                $img.attr('src','../images/icon2.png');
+                            }else{
+                                $img.attr('src','../images/icon1.png');
+                            }                           
+                            $type.html(type);
+                            if(type=='听写'){
+                                $type.addClass('dict');
+                            }else{                               
+                                $type.addClass('recite');  
+                            }
+                            var $task = $('<div class="task"></div>');
+                            var $name = $('<p class="name"></p>');
+                            var $icon = $('<span class="icon"></span>');
+                            $name.append(i+1+'.'); 
+                            $name.append($type); 
+                            $name.append(content.substring(2));                                                     
+                            $icon.append($img); 
+                            $task.append($name); 
+                            $task.append($icon); 
+                            $('.tasks').append($task); 
+                            if(data.data[i].score!=null){
+                                $task.click(function(){
+                                    alert('你已完成该任务！');
+                                });
+                            }else{
+                                if(data.data[i].end_time>=getDate()){
+                                   $task.click((function(tno){
+                                        return function(){  
+                                             localStorage.setItem('tno',tno);
+                                             uexWindow.open('lw', '0', 'lw_content.html', 2, '', '', 4, 500);
+                                             // uexWindow.open('dictation', '0', 'dictation.html', 2, '', '', 4, 500);
+                                        };                                 
+                                   })(data.data[i].tno));  
+                                }else{
+                                    $task.click((function(date){
+                                        var date = date.split('/');
+                                        date = date[0]+'年'+date[1]+'月'+date[2]+'日';
+                                        return function(){  
+                                             alert('该任务于'+date+'截止！');  
+                                        };                                 
+                                   })(data.data[i].end_time));                              
+                                }                               
+                            }                            
+                                    
+                        }
+                    }                                       
+                }, 
+                error : function(error){
+                    
+                } 
+            });
+            function getDate(){
+                var date = new Date();
+                var str = date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate();
+                return str;
+            }
+    </script>
+</html>
