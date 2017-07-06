@@ -9,7 +9,7 @@
 ### 结构
 * 客户端 Appcan + jQuery
 * 后端 Express + Mysql
-* [apk]('./demo/语乎.apk') (只打包了android)
+* [apk](./demo/语乎.apk) (只打包了android)
 
 ### 截图
 <img width="200" height="355" src="./demo/choice.jpg"/>
